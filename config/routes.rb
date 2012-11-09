@@ -1,6 +1,9 @@
 InPonto::Application.routes.draw do
   #get "home/index"
-  root :to => 'home#index'
+  root :to => "home#index"
+  match "home", :to => "home#index", :via => "get"
+  match "home/point-layer", :to => "home#point_layer", :via => "get"
+  match "home/kml", :to => "home#kml", :via => "get"
 end
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -14,17 +14,16 @@ namespace :kml_data do
 	kml_route = Nokogiri::XML File.read("lib/tasks/kml/Transporte_Coletivo_Fortaleza.kml")
 	kml_route.remove_namespaces!
 
-	route_list = []
-
 	kml_route.xpath("/kml//Folder//Folder//Placemark").each do |placemark|		
 		name_aux = placemark.xpath(".//name").text.split(/\s-\s/)
 
+		#coord_route possuia a ordem das latitude e longitudes invertidas
 		coord_route = placemark.xpath(".//coordinates").text.strip.gsub(/,/,' ').gsub(/\s0\s/,',').gsub(/\s0/,'')
 		
-		#OBSERVAÇÃO: As coordenadas de latitude longitude precisão ser trocadas de ordem!
+		#real_coor_route corrige a inversão das coordenadas
 		real_coord_route = coord_route.split(/,/).map do |coordinated|
-			coord_route_long = single_coord_route.split(/\s/)[0] 
-			coord_route_lat = single_coord_route.split(/\s/)[1]
+			coord_route_long = coordinated.split(/\s/)[0] 
+			coord_route_lat = coordinated.split(/\s/)[1]
 			"#{coord_route_lat} #{coord_route_long}"
 		end
 
@@ -44,11 +43,11 @@ namespace :kml_data do
 	#lê o kml dos pontos
 	kml_point = Nokogiri::XML File.read("lib/tasks/kml/Pontos_de_Paradas_Fortaleza.kml")
 	kml_point.remove_namespaces!
-
-	points_list = []
 	
 	kml_point.xpath("/kml//Folder//Placemark").each do|placemark|	
 		
+
+
 		#alternando a ordem das coordenadas do ponto de parada
 		coord_long = placemark.xpath(".//coordinates").text.split(/,/)[0]#longitude do ponto de parada
 		coord_lat = placemark.xpath(".//coordinates").text.split(/,/)[1]#latitude do ponto de parada

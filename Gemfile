@@ -25,6 +25,7 @@ gem 'nokogiri'
 
 #gem 'postgis_adapter'
 gem 'activerecord-postgis-adapter'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
