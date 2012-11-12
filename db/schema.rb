@@ -11,49 +11,54 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121105173339) do
+ActiveRecord::Schema.define(:version => 20121112194945) do
 
   create_table "cities", :force => true do |t|
-    t.column "name", :string
-    t.column "cod_city", :string
-    t.column "created_at", :datetime, :null => false
-    t.column "updated_at", :datetime, :null => false
+    t.string   "name"
+    t.string   "cod_city"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "geometry_columns", :id => false, :force => true do |t|
+    t.string  "f_table_catalog",   :limit => 256, :null => false
+    t.string  "f_table_schema",    :limit => 256, :null => false
+    t.string  "f_table_name",      :limit => 256, :null => false
+    t.string  "f_geometry_column", :limit => 256, :null => false
+    t.integer "coord_dimension",                  :null => false
+    t.integer "srid",                             :null => false
+    t.string  "type",              :limit => 30,  :null => false
   end
 
   create_table "point_routes", :force => true do |t|
-    t.column "route_id", :integer
-    t.column "point_id", :integer
-    t.column "created_at", :datetime, :null => false
-    t.column "updated_at", :datetime, :null => false
+    t.integer  "point_id"
+    t.string   "cod_route"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
-  create_table "point_stops", :force => true do |t|
-    t.column "cod_point", :string
-    t.column "next_to", :string
-    t.column "route_point", :string
-    t.column "created_at", :datetime, :null => false
-    t.column "updated_at", :datetime, :null => false
-    t.column "coord_desc", :point
-  end
+# Could not dump table "point_stops" because of following StandardError
+#   Unknown type 'geometry' for column 'coord_desc'
 
-  create_table "routes", :force => true do |t|
-    t.column "cod_route", :string
-    t.column "name_route", :string
-    t.column "sense_way", :boolean
-    t.column "price", :string
-    t.column "created_at", :datetime, :null => false
-    t.column "updated_at", :datetime, :null => false
-    t.column "path", :line_string
+# Could not dump table "routes" because of following StandardError
+#   Unknown type 'geometry' for column 'path'
+
+  create_table "spatial_ref_sys", :id => false, :force => true do |t|
+    t.integer "srid",                      :null => false
+    t.string  "auth_name", :limit => 256
+    t.integer "auth_srid"
+    t.string  "srtext",    :limit => 2048
+    t.string  "proj4text", :limit => 2048
   end
 
   create_table "transports", :force => true do |t|
-    t.column "cod_transpot", :string
-    t.column "sense_way", :boolean
-    t.column "accessibility", :boolean
-    t.column "stocking", :integer
-    t.column "coord_real_time", :string
-    t.column "created_at", :datetime, :null => false
-    t.column "updated_at", :datetime, :null => false
+    t.string   "cod_transpot"
+    t.boolean  "sense_way"
+    t.boolean  "accessibility"
+    t.integer  "stocking"
+    t.string   "coord_real_time"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
 end

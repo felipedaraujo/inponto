@@ -4,9 +4,10 @@ namespace :kml_data do
   task :set_data => :environment do
 
     ActiveRecord::Base.connection.execute(
-    	"truncate table routes, point_stops;
+    	"truncate table routes, point_stops, point_routes;
 		alter sequence routes_id_seq restart with 1;
-		alter sequence point_stops_id_seq restart with 1;"
+		alter sequence point_stops_id_seq restart with 1;
+		alter sequence point_routes_id_seq restart with 1;"
 	)
 
 	#lê o kml das rotas
@@ -29,20 +30,24 @@ namespace :kml_data do
 
 		#if !Route.exists?(name_route:name_aux[0..1].join(' ').gsub(/\/1/,'').strip.gsub(/\(STPC\)/,'- topic'),
 		#				  sense_way: (name_aux.last.strip.downcase == "ida") ? true : false)
+=begin
 		Route.create(
 			cod_route: name_aux[0],
 			name_route: name_aux[0..1].join(' ').gsub(/\/1/,'').strip.gsub(/\(STPC\)/,'- topic'),
 			sense_way: (name_aux.last.strip.downcase == "ida") ? true : false,
 			path: "LINESTRING(#{real_coord_route.join(',')})"
 		)
-		#end
 
+		#end
+=end
 	end
 
 
 	#lê o kml dos pontos
 	kml_point = Nokogiri::XML File.read("lib/tasks/kml/Pontos_de_Paradas_Fortaleza.kml")
 	kml_point.remove_namespaces!
+
+	increm = 0
 	
 	kml_point.xpath("/kml//Folder//Placemark").each do|placemark|	
 		
@@ -58,16 +63,42 @@ namespace :kml_data do
 		#exibe a referência do ponto
 		next_to = description.split(/b>/)[6].gsub(/<br></,'')
 		#exibe quais linhas passam por um ponto
-		route_point = description.split(/<br>/)[26].gsub(/\s/,'') if description.split(/<br>/)[26]
+		route_point = description.split(/<br>/).last.gsub(/\s/,'') if description.split(/<br>/).last
+		
 		
 		#if !Point.exists?(cod_point: placemark.xpath(".//name").text)
-		PointStop.create(
+
+		point_stop_tables = PointStop.create(
 			cod_point: placemark.xpath(".//name").text, 
 			coord_desc: "POINT(#{coord_desc})",
 			next_to: next_to,
 			route_point: route_point
 		)
-		#end
+
+
+		point_id = point_stop_tables.id
+
+		##VERIFICAR A NULIDADE DESSE CASO E CONTNUAR COM O HOME CONTROLLER
+
+		route_point = nil if !(route_point =~ /^\d/)
+
+
+
+		aux = if nil ? nil :  route_point.split(/;/)
+
+
+		aux.map do |single_cod_route|
+			PointRoute.create(
+				point_id: point_id,
+				cod_route: single_cod_route
+
+			)
+
+		end
+
+		
+
 	end
+	
   end
 end
