@@ -23,6 +23,7 @@ end
 gem 'jquery-rails'
 gem 'nokogiri'
 
+
 #gem 'postgis_adapter'
 gem 'activerecord-postgis-adapter'
 
