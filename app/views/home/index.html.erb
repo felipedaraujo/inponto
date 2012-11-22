@@ -1,3 +1,5 @@
+<script id="search_route_json" type="text/json"><%= raw @search_route.to_json.to_s %></script>
+
 <div class="navbar">
   <div class="navbar-inner">
     <!--<a class="brand" href="#"><img src="home/image/logo_inponto.png" width="114" heigth="69"/></a>-->
@@ -6,7 +8,7 @@
 		<li class="active"><a href="#">Transportes</a></li>
 		<li><a href="#">Sobre</a></li>
 		<form class="navbar-search pull-left">
-		  <input type="text" class="span5" placeholder="Digite o nome de uma rota">
+		  <input id="search_route" type="text" class="span5" placeholder="Digite o nome de uma rota">
 		</form>
     </ul>
   </div>

@@ -14,7 +14,7 @@
 //= require jquery_ujs
 //= require_tree
 //= require jquery-ui
-//= require autocomplete-rails
+
 $(document).ready(function(){
 
 var map;
@@ -32,6 +32,48 @@ map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
 var pointStopLayer = new google.maps.KmlLayer('http://inponto.com.br/ponto_teste.kml');
 
 pointStopLayer.setMap(map);
+
+//console.log($("#search_route_json").html().replace(/&quot;/gi,"\""));
+
+var searchRouteJSON = $("#search_route_json").html().replace(/&quot;/gi,"\""),
+        searchRoute = $.parseJSON(searchRouteJSON);
+
+$( "#search_route" ).autocomplete({
+    source: searchRoute
+});
+//tratamento de acentos no autocomplete
+var accentMap = {
+    "á": "a",
+    "â": "a",
+    "ã": "a",
+    "Á": "A",
+    "é": "e",
+    "í": "i",
+    "ó": "o",
+    "ô": "o",
+    "ú": "u",
+    "ç": "c",
+};
+
+var normalize = function( term ) {
+    var ret = "";
+    for ( var i = 0; i < term.length; i++ ) {
+        ret += accentMap[ term.charAt(i) ] || term.charAt(i);
+    }
+    return ret;
+};
+
+$( "#search_route" ).autocomplete({
+    source: function( request, response ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
+        response( $.grep( searchRoute, function( value ) {
+            value = value.label || value.value || value;
+            return matcher.test( value ) || matcher.test( normalize( value ) );
+        }) );
+    }
+});
+
+//pesquisar por full text search
 
 
 });
