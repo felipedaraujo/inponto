@@ -29,7 +29,9 @@ var mapOptions = {
 
 map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
 
-var pointStopLayer = new google.maps.KmlLayer('http://inponto.com.br/ponto_teste.kml');
+var pointStopLayer = new google.maps.KmlLayer('http://inponto.com/imports/pontolayer.kml');
+//var pointStopLayer = new google.maps.KmlLayer('http://www.etufor.ce.gov.br/googleearth/pontos_de_paradas.kml');
+
 
 pointStopLayer.setMap(map);
 
