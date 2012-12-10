@@ -15,6 +15,7 @@
 //= require_tree
 //= require jquery-ui
 
+
 $(document).ready(function(){
 
 var map;
@@ -29,21 +30,30 @@ var mapOptions = {
 
 map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
 
-var pointStopLayer = new google.maps.KmlLayer('http://inponto.com/imports/pontolayer.kml');
+
 //var pointStopLayer = new google.maps.KmlLayer('http://www.etufor.ce.gov.br/googleearth/pontos_de_paradas.kml');
-
-
+var pointStopLayer = new google.maps.KmlLayer('http://inponto.com/imports/point_layer_part01-min.kml');
+pointStopLayer.setMap(map);
+pointStopLayer = new google.maps.KmlLayer('http://inponto.com/imports/point_layer_part02-min.kml');
+pointStopLayer.setMap(map);
+pointStopLayer = new google.maps.KmlLayer('http://inponto.com/imports/point_layer_part03-min.kml');
+pointStopLayer.setMap(map);
+pointStopLayer = new google.maps.KmlLayer('http://inponto.com/imports/point_layer_part04-min.kml');
 pointStopLayer.setMap(map);
 
 //console.log($("#search_route_json").html().replace(/&quot;/gi,"\""));
 
+/*
 var searchRouteJSON = $("#search_route_json").html().replace(/&quot;/gi,"\""),
         searchRoute = $.parseJSON(searchRouteJSON);
 
 $( "#search_route" ).autocomplete({
     source: searchRoute
 });
+*/
+
 //tratamento de acentos no autocomplete
+/*
 var accentMap = {
     "á": "a",
     "â": "a",
@@ -74,9 +84,33 @@ $( "#search_route" ).autocomplete({
         }) );
     }
 });
+*/
+
+$( "#search_route" ).autocomplete({
+    source: "/home/search",
+    minLength: 2,
+    select: function(){
+        var flightPlanCoordinates = "/home/coord-route" ;
+
+        var flightPath = new google.maps.Polyline({
+          path: flightPlanCoordinates,
+          strokeColor: '#FF0000',
+          strokeOpacity: 1.0,
+          strokeWeight: 2
+        });
+
+        flightPath.setMap(map);
+    }
+});
+
+$("search_route").blur(function(){
+    
+});
+
+
+
 
 //pesquisar por full text search
 
 
 });
-

@@ -1,9 +1,16 @@
 InPonto::Application.routes.draw do
   #get "home/index"
   root :to => "home#index"
-  match "home", :to => "home#index", :via => "get"
-  match "home/point-layer", :to => "home#point_layer", :via => "get"
-  match "home/kml", :to => "home#kml", :via => "get"
+  match "home", :to => "home#index", :via => "GET"
+  match "home/point-layer", :to => "home#point_layer", :via => "GET"
+  #match "home/kml", :to => "home#kml", :via => "GET"
+  match "home/search", :to => "home#search_name_route", :via => "GET"
+  match 'home/coord-route', :to => 'home#search_coord_route', :via => "GET"
+  
+  #resources :home do
+  #  get :autocomplete_home_name_route, :on => :collection
+  #end
+
 end
   # The priority is based upon order of creation:
   # first created -> highest priority.
