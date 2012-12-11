@@ -88,7 +88,9 @@ $( "#search_route" ).autocomplete({
 
 $( "#search_route" ).autocomplete({
     source: "/home/search",
-    minLength: 2,
+    minLength: 2
+    
+    /*
     select: function(){
         var flightPlanCoordinates = "/home/coord-route" ;
 
@@ -101,13 +103,8 @@ $( "#search_route" ).autocomplete({
 
         flightPath.setMap(map);
     }
+    */
 });
-
-$("search_route").blur(function(){
-    
-});
-
-
 
 
 //pesquisar por full text search
