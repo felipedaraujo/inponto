@@ -18,96 +18,66 @@
 
 $(document).ready(function(){
 
-var map;
-var image = 'http://inponto.com.br/pin.png';
+    var map;
+    var iterator = 0;
+    //ar image = 'http://inponto.com.br/pin.png';
 
-var mapOptions = {
-	zoom: 14,
-	center: new google.maps.LatLng(-3.728394,-38.543395),
-	mapTypeId: google.maps.MapTypeId.ROADMAP
-};
+    var mapOptions = {
+        zoom: 14,
+        center: new google.maps.LatLng(-3.728394,-38.543395),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        minZoom:10
 
-
-map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
-
-
-//var pointStopLayer = new google.maps.KmlLayer('http://www.etufor.ce.gov.br/googleearth/pontos_de_paradas.kml');
-var pointStopLayer = new google.maps.KmlLayer('http://inponto.com/imports/point_layer_part01-min.kml');
-pointStopLayer.setMap(map);
-pointStopLayer = new google.maps.KmlLayer('http://inponto.com/imports/point_layer_part02-min.kml');
-pointStopLayer.setMap(map);
-pointStopLayer = new google.maps.KmlLayer('http://inponto.com/imports/point_layer_part03-min.kml');
-pointStopLayer.setMap(map);
-pointStopLayer = new google.maps.KmlLayer('http://inponto.com/imports/point_layer_part04-min.kml');
-pointStopLayer.setMap(map);
-
-//console.log($("#search_route_json").html().replace(/&quot;/gi,"\""));
-
-/*
-var searchRouteJSON = $("#search_route_json").html().replace(/&quot;/gi,"\""),
-        searchRoute = $.parseJSON(searchRouteJSON);
-
-$( "#search_route" ).autocomplete({
-    source: searchRoute
-});
-*/
-
-//tratamento de acentos no autocomplete
-/*
-var accentMap = {
-    "á": "a",
-    "â": "a",
-    "ã": "a",
-    "Á": "A",
-    "é": "e",
-    "í": "i",
-    "ó": "o",
-    "ô": "o",
-    "ú": "u",
-    "ç": "c",
-};
-
-var normalize = function( term ) {
-    var ret = "";
-    for ( var i = 0; i < term.length; i++ ) {
-        ret += accentMap[ term.charAt(i) ] || term.charAt(i);
-    }
-    return ret;
-};
-
-$( "#search_route" ).autocomplete({
-    source: function( request, response ) {
-        var matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );
-        response( $.grep( searchRoute, function( value ) {
-            value = value.label || value.value || value;
-            return matcher.test( value ) || matcher.test( normalize( value ) );
-        }) );
-    }
-});
-*/
-
-$( "#search_route" ).autocomplete({
-    source: "/home/search",
-    minLength: 2
+    };
+    map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
     
-    /*
-    select: function(){
-        var flightPlanCoordinates = "/home/coord-route" ;
-
-        var flightPath = new google.maps.Polyline({
-          path: flightPlanCoordinates,
-          strokeColor: '#FF0000',
-          strokeOpacity: 1.0,
-          strokeWeight: 2
+    function layerStopPoint(){
+        $.getJSON("/home/point-stop",function(data){
+            console.log(data);
+            
+            var array_points = new Array();
+            
+            for (var i = 0; i < data.length; i++) {
+                array_points[i] = new google.maps.LatLng(data[i][0], data[i][1]);
+                new google.maps.Marker({
+                  position: array_points[i],
+                  map: map,
+                  draggable: false,
+                  animation: google.maps.Animation.DROP
+                });   
+            }
+            
         });
-
-        flightPath.setMap(map);
+        //var pointStopLayer;
+        //for (var i = 1; i <= 2; i++) {
+        //var pointStopLayer = new google.maps.KmlLayer("http://inponto.com/imports/point_layer_part02-min.kml");
+        //pointStopLayer.setMap(map);
+        //};
+        //var pointStopLayer = new google.maps.KmlLayer('http://www.etufor.ce.gov.br/googleearth/pontos_de_paradas.kml');
     }
+    layerStopPoint();
+    /*
+    var marker = new google.maps.Marker({
+            position: layerStopPoint(),
+            //icon: image
+    });
+
+    marker.setMap(map);
     */
-});
 
+    printRoute = function(id){
+        $.getJSON("/home/coord-route/"+id,function(data){
+            console.log(data);
+        });
+    }
 
-//pesquisar por full text search
-
+    $("#search_route").autocomplete({
+        source: "/home/search",
+        minLength: 2,
+        autoFocus: true,
+        select: function( event, ui ) {            
+            printRoute(ui.item.id)
+        }
+    });
 
 });

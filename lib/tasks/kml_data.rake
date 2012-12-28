@@ -21,11 +21,11 @@ namespace :kml_data do
 		#coord_route possuia a ordem das latitude e longitudes invertidas
 		coord_route = placemark.xpath(".//coordinates").text.strip.gsub(/,/,' ').gsub(/\s0\s/,',').gsub(/\s0/,'')
 		
-		#real_coord_route refina as coordenadas e as deixam inertidas mesmo devido o kml
+		#real_coord_route refina as coordenadas devido o kml possui as coordenadas invertidas
 		real_coord_route = coord_route.split(/,/).map do |coordinated|
 			coord_route_long = coordinated.split(/\s/)[0] 
 			coord_route_lat = coordinated.split(/\s/)[1]
-			"#{coord_route_long} #{coord_route_lat}"
+			"#{coord_route_lat} #{coord_route_long}"
 		end
 	
 		Route.create(
@@ -46,7 +46,7 @@ namespace :kml_data do
 		#refinando as coordenadas do ponto de parada, a ordem deve ser inversa devido o kml
 		coord_long = placemark.xpath(".//coordinates").text.split(/,/)[0]#longitude do ponto de parada
 		coord_lat = placemark.xpath(".//coordinates").text.split(/,/)[1]#latitude do ponto de parada
-		coord_desc = "#{coord_long} #{coord_lat}"
+		coord_desc = "#{coord_lat} #{coord_long}"
 		
 		#descrição do ponto
 		description = placemark.xpath(".//description").text

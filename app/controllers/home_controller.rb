@@ -9,14 +9,24 @@ class HomeController < ApplicationController
 
   def search_name_route
     #results = Route.select("name_route, ST_AsText(path) as path").where('name_route ILIKE ? and sense_way = true', "%#{params[:term]}%").limit(10).map{|r| {label: r.name_route, value:r.cod_route}}
-    results = Route.where('name_route ILIKE ? and sense_way = true', "%#{params[:term]}%").limit(10).map{|r| {label: r.name_route, value:r.cod_route}}
+    results = Route.where('name_route ILIKE ? and sense_way = true', "%#{params[:term]}%").limit(10).map{|r| {label: "#{r.name_route}", id: "#{r.cod_route}"}}
     render json: results
   end
 
   def search_coord_route
-    #arg = "%#{params[:term]}%"
-    results = Route.select("ST_AsText(path)").where("name_route = ?", "014 Aguanambi II")
+    results = Route.select("st_asgeojson(path) as path").where("cod_route = ?", "#{params[:id]}")
+    results.map! do |value|
+      ActiveSupport::JSON.decode(value[:path])["coordinates"]
+    end
     render json: results
+  end
+
+  def point_layer_dinamic
+    results = PointStop.select('st_asgeojson(coord_desc) as coord_desc').all
+    results.map! do |value|
+      ActiveSupport::JSON.decode(value[:coord_desc])["coordinates"]
+    end
+    render json: results 
   end
 
   def point_layer
