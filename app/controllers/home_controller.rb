@@ -76,4 +76,3 @@ class HomeController < ApplicationController
   end
 =end
 end
-PointStop.select("st_asgeojson(coord_desc) as coord_desc").where ("st_intersects(coord_desc, 'POLYGON((-3.7351816593448244 -38.57098956634525, -3.721606288254904 -38.57098956634525, -3.721606288254904 -38.51580043365482, -3.7351816593448244 -38.51580043365482, -3.7351816593448244 -38.57098956634525))')")
