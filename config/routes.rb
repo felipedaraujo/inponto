@@ -1,12 +1,12 @@
 InPonto::Application.routes.draw do
   #get "home/index"
-  root :to => "home#index"
-  match "home", :to => "home#index", :via => "GET"
-  match "home/point-stop", :to => "home#point_layer_dinamic", :via => "GET"
-  match "home/point-layer", :to => "home#point_layer", :via => "GET"
-  #match "home/kml", :to => "home#kml", :via => "GET"
-  match "home/search", :to => "home#search_name_route", :via => "GET"
-  match "home/coord-route/:id", :to => "home#search_coord_route", :via => "GET"
+  root                          :to => "home#index"
+  match "home",                 :to => "home#index"
+  match "home/point-layer",     :to => "home#point_layer"
+  #match "home/kml",            :to => "home#kml"
+  match "home/search",          :to => "home#search_name_route"
+  match "home/coord-route/:id", :to => "home#search_coord_route"
+  match "home/point-stop/",     :to => "home#point_layer_dinamic"
   
   #resources :home do
   #  get :autocomplete_home_name_route, :on => :collection

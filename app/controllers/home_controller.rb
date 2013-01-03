@@ -16,17 +16,23 @@ class HomeController < ApplicationController
   def search_coord_route
     results = Route.select("st_asgeojson(path) as path").where("cod_route = ?", "#{params[:id]}")
     results.map! do |value|
-      ActiveSupport::JSON.decode(value[:path])["coordinates"]
+     ActiveSupport::JSON.decode(value[:path])["coordinates"]
     end
     render json: results
   end
 
   def point_layer_dinamic
-    results = PointStop.select('st_asgeojson(coord_desc) as coord_desc').all
+    (lat1, long1, lat2, long2) = params[:bounds].split(",")
+    bounds = [[lat1,long1], [lat2,long1], [lat2,long2], [lat1,long2], [lat1,long1]]
+    bounds.map! {|e| e.join(' ')}
+    
+    results = PointStop.select("st_asgeojson(coord_desc) as coord_desc").where ("st_intersects(coord_desc, 'POLYGON((#{bounds.join(',')}))')")
+    
     results.map! do |value|
       ActiveSupport::JSON.decode(value[:coord_desc])["coordinates"]
     end
-    render json: results 
+    
+    render json: results
   end
 
   def point_layer
@@ -70,3 +76,4 @@ class HomeController < ApplicationController
   end
 =end
 end
+PointStop.select("st_asgeojson(coord_desc) as coord_desc").where ("st_intersects(coord_desc, 'POLYGON((-3.7351816593448244 -38.57098956634525, -3.721606288254904 -38.57098956634525, -3.721606288254904 -38.51580043365482, -3.7351816593448244 -38.51580043365482, -3.7351816593448244 -38.57098956634525))')")
