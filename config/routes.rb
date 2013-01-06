@@ -2,6 +2,7 @@ InPonto::Application.routes.draw do
   #get "home/index"
   root                          :to => "home#index"
   match "home",                 :to => "home#index"
+  #match "home/:id",             :to => "home#index"
   match "home/point-layer",     :to => "home#point_layer"
   #match "home/kml",            :to => "home#kml"
   match "home/search",          :to => "home#search_name_route"

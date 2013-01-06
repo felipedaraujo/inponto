@@ -17,6 +17,9 @@
 
 $(document).ready(function(){
 
+
+    // Create a div to hold the control.
+
     var i, j;
     var map;
     //var image = 'http://inponto.com.br/pin.png';
@@ -25,15 +28,38 @@ $(document).ready(function(){
     var marker_stops = [];
     var coord_route = [[]];
     var polyline_route = [];
+    var color_route =["#228B22", "#7CFC00"];
+    //var color_route =["#0000FF", "#EE0000"];
+    var fortaleza = new google.maps.LatLng(-3.728394,-38.543395);
+
+    
 
     var mapOptions = {
         zoom: 14,
-        center: new google.maps.LatLng(-3.728394,-38.543395),
+        minZoom:10,
+        center: fortaleza,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+        },
+        panControl: true,
+        panControlOptions: {
+          position: google.maps.ControlPosition.RIGHT_TOP
+        },
+        zoomControl: true,
+        zoomControlOptions: {
+            style: google.maps.ZoomControlStyle.SMALL, 
+          position: google.maps.ControlPosition.RIGHT_TOP 
+        },
+        
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        minZoom:10
+
     };
     
     map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
+
+    //var input = document.getElementById('search_address');
+    //var autocomplete = new google.maps.places.Autocomplete(input);
 
     cleanMap = function(structure){
         if (structure) {
@@ -79,29 +105,52 @@ $(document).ready(function(){
     //};
     //var pointStopLayer = new google.maps.KmlLayer('http://www.etufor.ce.gov.br/googleearth/pontos_de_paradas.kml');
 
-    printRoute = function(data){
-        //console.log(data.length);
-        //console.log(data[0].length);
-        //console.log(data[1].length);
-        for(i = 0 ; i < data.length ; i++){
+    updateUrl = function(params){
+        
+        local_url = window.location.href
+        window.location.href = null
+        window.location.href = local_url + '?' + params
+    }
 
-        //for(i in data){
-            //console.log(coord_route[j]);
-            for(j = 0 ; data[i].length ; j++){
-            //for(j in data[i]){
-                coord_route[i][j] = new google.maps.LatLng(data[i][j][0], data[i][j][1]);
-                //console.log(coord_route[i]);
+    printRoute = function(data){
+        //updateUrl('tutum=')
+
+        //bordas armazena as bordas das polilinhas
+        //essa informação é usada para centralizar o mapa
+        var bordas = new google.maps.LatLngBounds();
+        
+        cleanMap(polyline_route);
+
+        coord_route = [[],[]];
+        for(i in data){
+            for(j in data[i]){
+                lat = data[i][j][0];
+                lng = data[i][j][1];
+                coord_route[i][j] = new google.maps.LatLng(lat, lng);
+
+                //bordas.extend e bordas.getCenter são métodos para encontrar o centro das rotas
+                bordas.extend(coord_route[i][j]);
+                bordas.getCenter();
+                
             }
-            
-            polyline_route[i] = new google.maps.Polyline({
-                path: coord_route[i],
-                strokeColor: '#FF0000',
-                strokeOpacity: 1,
-                strokeWeight: 2
-            });
-            polyline_route[i].setMap(map);
+
         }
 
+        for (i=0; i < data.length; i++) {
+            polyline_route[i] = new google.maps.Polyline({
+                path: coord_route[i],
+                strokeColor: color_route[i],
+                strokeOpacity: 1.0,
+                strokeWeight: 3
+            });
+
+            //polyline_route[i].setMap(map) plota as rotas no mapa
+            polyline_route[i].setMap(map);
+            
+            //map.fitBounds(bordas) centraliza
+            map.fitBounds(bordas);
+
+        }
         
     }
 
@@ -109,12 +158,17 @@ $(document).ready(function(){
         source: "/home/search",
         minLength: 2,
         autoFocus: true,
-        select: function( event, ui ) {            
+        select: function( event, ui ) {
+            //updateUrl(ui.item.id+"-fortaleza")            
             $.getJSON("/home/coord-route/"+ui.item.id,printRoute)
         }
     });
 
-
+    path = $.url().attr().query.split('=')[1]
+    if(path != '') {
+        console.log(path)
+        $.getJSON("/home/coord-route/"+path, printRoute)
+    }
 
 });
 

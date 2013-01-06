@@ -26,7 +26,7 @@ namespace :kml_data do
 			coord_route_long = coordinated.split(/\s/)[0] 
 			coord_route_lat = coordinated.split(/\s/)[1]
 			"#{coord_route_lat} #{coord_route_long}"
-		end
+		enddo
 	
 		Route.create(
 			cod_route: name_aux[0],

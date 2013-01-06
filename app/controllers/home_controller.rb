@@ -4,22 +4,33 @@ class HomeController < ApplicationController
   #autocomplete :route, :name_route
 
   def index
-      @search_route = Route.select('name_route').all.map(&:name_route)
+      
   end 
 
   def search_name_route
     #results = Route.select("name_route, ST_AsText(path) as path").where('name_route ILIKE ? and sense_way = true', "%#{params[:term]}%").limit(10).map{|r| {label: r.name_route, value:r.cod_route}}
-    results = Route.where('name_route ILIKE ? and sense_way = true', "%#{params[:term]}%").limit(10).map{|r| {label: "#{r.name_route}", id: "#{r.cod_route}"}}
+    results = Route.select('distinct name_route, cod_route').where('name_route ILIKE ? ', "%#{params[:term]}%").limit(10).map{|r| {label: "#{r.name_route}", id: "#{r.cod_route}"}}
     render json: results
   end
 
+  
   def search_coord_route
     results = Route.select("st_asgeojson(path) as path").where("cod_route = ?", "#{params[:id]}")
+    
     results.map! do |value|
      ActiveSupport::JSON.decode(value[:path])["coordinates"]
     end
-    render json: results
+    
+    respond_to do |format|
+      format.html do
+        render controller: "home", action: "index"
+        #render json: results
+      end
+      format.json{render json: results}
+    end
+
   end
+
 
   def point_layer_dinamic
     (lat1, long1, lat2, long2) = params[:bounds].split(",")
@@ -35,6 +46,7 @@ class HomeController < ApplicationController
     render json: results
   end
 
+=begin
   def point_layer
     sql_point_route = "SELECT ST_AsKML('SRID=4326;' || ST_AsText(coord_desc)) as kml, next_to, name_route 
                         FROM point_stops INNER JOIN point_routes ON point_stops.id = point_routes.point_id
@@ -70,7 +82,7 @@ class HomeController < ApplicationController
 
     render :text => "#{content[3545..4728].join('')}", :content_type => "text/xml"
   end
-=begin
+
   def kml       
         render :file => Rails.root.join('public','cta.kml'), :content_type => "text/xml", :layout => false
   end
