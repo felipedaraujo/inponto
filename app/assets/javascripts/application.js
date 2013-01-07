@@ -17,22 +17,17 @@
 
 $(document).ready(function(){
 
-
     // Create a div to hold the control.
 
     var i = 0, j = 0;
     var map;
-    //var image = 'http://inponto.com.br/pin.png';
     var image = '/ponto.png';
     var coord_stops = [];
     var marker_stops = [];
     var coord_route = [[]];
     var polyline_route = [];
-    var color_route =["#228B22", "#7CFC00"];
-    //var color_route =["#0000FF", "#EE0000"];
+    var color_route =["#228B22", "#7CFC00"];    
     var fortaleza = new google.maps.LatLng(-3.728394,-38.543395);
-
-    
 
     var mapOptions = {
         zoom: 14,
@@ -58,62 +53,47 @@ $(document).ready(function(){
     
     map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
 
-    //Procura as rotas que assam em um dado ponto
-    searchRoutesPoint = function(){
-      $.getJSON("/home/coord-route/"+ui.item.id,printRoute)
+    listRoutes = function(){
 
+    };
+
+    //Procura as rotas que passam em um dado ponto
+    searchRoutesPoint = function(){
+      google.maps.event.addListener(autocompleteAddress, 'place_changed', function() {
+        var markerAutocomplete = new google.maps.Marker({
+          map: map
+        });
+        markerAutocomplete.setVisible(true);
+        input.className = '';
+        var place = autocompleteAddress.getPlace();
+        if (!place.geometry) {
+          // Inform the user that the place was not found and return.
+          input.className = 'notfound';
+          return;
+        }
+        // If the place has a geometry, then present it on a map.
+        if (place.geometry.viewport) {
+          map.fitBounds(place.geometry.viewport);
+        } else {
+          map.setCenter(place.geometry.location);
+          map.setZoom(17);  // Why 17? Because it looks good.
+        }
+        markerAutocomplete.setPosition(place.geometry.location);
+        
+        var locationPoint = place.geometry.location;
+
+        //$.getJSON("home/routes-by-point/"+locationPoint,listRoutes);
+
+      });
 
     }
 
     //Autocomplete de Rotas========================================================
 
     var input = document.getElementById('search_address');
-    
-    var autocomplete = new google.maps.places.Autocomplete(input);
-    
-    autocomplete.bindTo('bounds', map);
-
-
-
-    var markerAutocomplete = new google.maps.Marker(
-      {map: map}
-    );
-
-    google.maps.event.addListener(autocomplete, 'place_changed', function() {
-
-      markerAutocomplete.setVisible(true);
-      input.className = '';
-
-      var place = autocomplete.getPlace();
-
-      console.log(place.geometry.location);
-
-      if (!place.geometry) {
-        // Inform the user that the place was not found and return.
-        input.className = 'notfound';
-        return;
-      }
-
-      // If the place has a geometry, then present it on a map.
-      if (place.geplace.geometry.locationometry.viewport) {
-        map.fitBounds(place.geometry.viewport);
-      } else {
-        map.setCenter(place.geometry.location);
-        map.setZoom(17);  // Why 17? Because it looks good.
-      }
-
-      markerAutocomplete.setPosition(place.geometry.location);
-
-      var address = '';
-      if (place.address_components) {
-        addrinputess = [
-          (place.address_components[0] && place.address_components[0].short_name || ''),
-          (place.address_components[1] && place.address_components[1].short_name || ''),
-          (place.address_components[2] && place.address_components[2].short_name || '')
-        ].join(' ');
-      }
-
-    });
+    var autocompleteAddress = new google.maps.places.Autocomplete(input);
+    autocompleteAddress.bindTo('bounds', map);
+    searchRoutesPoint();
 
     //FIM Autocomplete de Rotas ===========================================================
 
@@ -196,7 +176,7 @@ $(document).ready(function(){
         }
     }
     
-    /*
+    
     $("#search_route").autocomplete({
         source: "/home/search",
         minLength: 2,
@@ -211,17 +191,17 @@ $(document).ready(function(){
     
 
 
-    path = $.url().attr().query.split('=')[1]
+    /*path = $.url().attr().query.split('=')[1]
     if(path != '') {
         console.log(path)
         $.getJSON("/home/coord-route/"+path, printRoute)
     }
     */
 
-    $.widget("custom.catcomplete", $.ui.autocomplete, {
+    /*$.widget("custom.catcomplete", $.ui.autocomplete, {
       _renderMenu: function( ul, items ) {
         var self = this;
-        console.log(items);
+        //console.log(items);
         ul.append( "<li class='category'> Rotas </li>");
         $.each( items, function( index, item ) {
       
@@ -235,11 +215,7 @@ $(document).ready(function(){
 
 
     $('#search_route').catcomplete({
-      
-      /*source: function(request, response) {
-        response(data);
-      }*/
-
+     
       source: "/home/search",
       minLength: 2,
       autoFocus: true,
@@ -249,6 +225,6 @@ $(document).ready(function(){
           console.log(ui.item)         
           $.getJSON("/home/coord-route/"+ui.item.id,printRoute)
       }
-    });
+    });*/
 
 });
