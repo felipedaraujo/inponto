@@ -53,6 +53,26 @@ $(document).ready(function(){
     
     map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
 
+    
+    function handleNoGeolocation(errorFlag) {
+      if (errorFlag) {
+        var content = 'Error: The Geolocation service failed.';
+      } else {
+        var content = 'Error: Your browser doesn\'t support geolocation.';
+      }
+
+      var options = {
+        map: map,
+        position: new google.maps.LatLng(60, 105),
+        content: content
+      };
+
+      var infowindow = new google.maps.InfoWindow(options);
+      map.setCenter(options.position);
+    }
+
+
+    //Lista as rotas que passam em um dados ponto
     listRoutes = function(){
 
     };
