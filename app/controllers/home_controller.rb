@@ -4,9 +4,11 @@ class HomeController < ApplicationController
   #autocomplete :route, :name_route
 
   def index
+    
       
   end 
 
+  #Lista de nomes das rotas baseado em uma pesquisa
   def search_name_route
     #results = Route.select("name_route, ST_AsText(path) as path").where('name_route ILIKE ? and sense_way = true', "%#{params[:term]}%").limit(10).map{|r| {label: r.name_route, value:r.cod_route}}
     results = Route.select('distinct name_route, cod_route').where('name_route ILIKE ? ', "%#{params[:term]}%").limit(10).map{|r| {label: "#{r.name_route}", id: "#{r.cod_route}"}}
@@ -14,6 +16,7 @@ class HomeController < ApplicationController
   end
 
   
+  #Coordenadas que formam a polilinhas de uma rotas
   def search_coord_route
     results = Route.select("st_asgeojson(path) as path").where("cod_route = ?", "#{params[:id]}")
     
@@ -31,7 +34,14 @@ class HomeController < ApplicationController
 
   end
 
+  #Rotas que passam em uma determinada localidade
+  def search_route_point
+    results = Route.where("st_intersects")
+    
+  end
 
+
+  #Pontos de parada visiveis na tela atual do usuário
   def point_layer_dinamic
     (lat1, long1, lat2, long2) = params[:bounds].split(",")
     bounds = [[lat1,long1], [lat2,long1], [lat2,long2], [lat1,long2], [lat1,long1]]

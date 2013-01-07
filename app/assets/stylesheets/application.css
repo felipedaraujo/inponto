@@ -24,6 +24,13 @@ padding:0;
 height:94%;	
 }
 
+.category {
+font-weight: bold;
+padding: .1em .2em;
+margin: .8em 0 .2em;
+line-height: 1.5;
+}
+
 /*
 .infowindow_style {
 width:350px;

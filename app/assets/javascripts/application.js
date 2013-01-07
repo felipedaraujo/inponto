@@ -20,7 +20,7 @@ $(document).ready(function(){
 
     // Create a div to hold the control.
 
-    var i, j;
+    var i = 0, j = 0;
     var map;
     //var image = 'http://inponto.com.br/pin.png';
     var image = '/ponto.png';
@@ -58,8 +58,64 @@ $(document).ready(function(){
     
     map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
 
-    //var input = document.getElementById('search_address');
-    //var autocomplete = new google.maps.places.Autocomplete(input);
+    //Procura as rotas que assam em um dado ponto
+    searchRoutesPoint = function(){
+      $.getJSON("/home/coord-route/"+ui.item.id,printRoute)
+
+
+    }
+
+    //Autocomplete de Rotas========================================================
+
+    var input = document.getElementById('search_address');
+    
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    
+    autocomplete.bindTo('bounds', map);
+
+
+
+    var markerAutocomplete = new google.maps.Marker(
+      {map: map}
+    );
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+
+      markerAutocomplete.setVisible(true);
+      input.className = '';
+
+      var place = autocomplete.getPlace();
+
+      console.log(place.geometry.location);
+
+      if (!place.geometry) {
+        // Inform the user that the place was not found and return.
+        input.className = 'notfound';
+        return;
+      }
+
+      // If the place has a geometry, then present it on a map.
+      if (place.geplace.geometry.locationometry.viewport) {
+        map.fitBounds(place.geometry.viewport);
+      } else {
+        map.setCenter(place.geometry.location);
+        map.setZoom(17);  // Why 17? Because it looks good.
+      }
+
+      markerAutocomplete.setPosition(place.geometry.location);
+
+      var address = '';
+      if (place.address_components) {
+        addrinputess = [
+          (place.address_components[0] && place.address_components[0].short_name || ''),
+          (place.address_components[1] && place.address_components[1].short_name || ''),
+          (place.address_components[2] && place.address_components[2].short_name || '')
+        ].join(' ');
+      }
+
+    });
+
+    //FIM Autocomplete de Rotas ===========================================================
 
     cleanMap = function(structure){
         if (structure) {
@@ -98,13 +154,6 @@ $(document).ready(function(){
 
     google.maps.event.addListener(map, 'idle', boundsMap);
 
-    //var pointStopLayer;
-    //for (var i = 1; i <= 2; i++) {
-    //var pointStopLayer = new google.maps.KmlLayer("http://inponto.com/imports/point_layer_part02-min.kml");
-    //pointStopLayer.setMap(map);
-    //};
-    //var pointStopLayer = new google.maps.KmlLayer('http://www.etufor.ce.gov.br/googleearth/pontos_de_paradas.kml');
-
     updateUrl = function(params){
         
         local_url = window.location.href
@@ -127,15 +176,11 @@ $(document).ready(function(){
                 lat = data[i][j][0];
                 lng = data[i][j][1];
                 coord_route[i][j] = new google.maps.LatLng(lat, lng);
-
                 //bordas.extend e bordas.getCenter são métodos para encontrar o centro das rotas
                 bordas.extend(coord_route[i][j]);
                 bordas.getCenter();
-                
             }
-
         }
-
         for (i=0; i < data.length; i++) {
             polyline_route[i] = new google.maps.Polyline({
                 path: coord_route[i],
@@ -146,33 +191,64 @@ $(document).ready(function(){
 
             //polyline_route[i].setMap(map) plota as rotas no mapa
             polyline_route[i].setMap(map);
-            
             //map.fitBounds(bordas) centraliza
             map.fitBounds(bordas);
-
         }
-        
     }
-
+    
+    /*
     $("#search_route").autocomplete({
         source: "/home/search",
         minLength: 2,
         autoFocus: true,
+        
         select: function( event, ui ) {
             //updateUrl(ui.item.id+"-fortaleza")            
             $.getJSON("/home/coord-route/"+ui.item.id,printRoute)
         }
+
     });
+    
+
 
     path = $.url().attr().query.split('=')[1]
     if(path != '') {
         console.log(path)
         $.getJSON("/home/coord-route/"+path, printRoute)
     }
+    */
+
+    $.widget("custom.catcomplete", $.ui.autocomplete, {
+      _renderMenu: function( ul, items ) {
+        var self = this;
+        console.log(items);
+        ul.append( "<li class='category'> Rotas </li>");
+        $.each( items, function( index, item ) {
+      
+            self._renderItem( ul, {
+              label: item.label
+            });
+
+        });
+      }
+    });
+
+
+    $('#search_route').catcomplete({
+      
+      /*source: function(request, response) {
+        response(data);
+      }*/
+
+      source: "/home/search",
+      minLength: 2,
+      autoFocus: true,
+      
+      select: function( event, ui ) {
+          //updateUrl(ui.item.id+"-fortaleza")
+          console.log(ui.item)         
+          $.getJSON("/home/coord-route/"+ui.item.id,printRoute)
+      }
+    });
 
 });
-
-
-
-
-
