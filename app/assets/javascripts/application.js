@@ -22,62 +22,131 @@ $(document).ready(function(){
     var i = 0, j = 0;
     var map;
     var image = '/ponto.png';
+    var imageuser = '/userlocation.png';
     var coord_stops = [];
     var marker_stops = [];
     var coord_route = [[]];
     var polyline_route = [];
+    var markerUser;//marcador da localização do usuário
     var color_route =["#228B22", "#7CFC00"];    
     var fortaleza = new google.maps.LatLng(-3.728394,-38.543395);
 
-    var mapOptions = {
-        zoom: 14,
-        minZoom:10,
-        center: fortaleza,
-        mapTypeControl: true,
-        mapTypeControlOptions: {
-          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-        },
-        panControl: true,
-        panControlOptions: {
-          position: google.maps.ControlPosition.RIGHT_TOP
-        },
-        zoomControl: true,
-        zoomControlOptions: {
-            style: google.maps.ZoomControlStyle.SMALL, 
-          position: google.maps.ControlPosition.RIGHT_TOP 
-        },
+    
+    initialize = function(){
+        var mapOptions = {
+            zoom: 14,
+            minZoom:10,
+            //center: fortaleza,
+            mapTypeControl: true,
+            mapTypeControlOptions: {
+              style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+            },
+            panControl: true,
+            panControlOptions: {
+              position: google.maps.ControlPosition.RIGHT_TOP
+            },
+            zoomControl: true,
+            zoomControlOptions: {
+                style: google.maps.ZoomControlStyle.SMALL, 
+              position: google.maps.ControlPosition.RIGHT_TOP 
+            },
+            
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+
+        };
         
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
 
+        
+        //Primeira captura da localização
+        if(navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = new google.maps.LatLng(position.coords.latitude,
+                                             position.coords.longitude);
+
+            
+            markerUser = new google.maps.Marker({
+              map: map,
+              icon:imageuser
+            });
+            
+            markerUser.setPosition(pos);
+            map.setCenter(pos);
+            map.setZoom(17);
+          }, function() {
+            handleNoGeolocation(true);
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleNoGeolocation(false);
+        }
+
+
+    }
+
+    cleanMap = function(structure){
+        if (structure) {
+            for (i in structure) {
+              structure[i].setMap(null);
+            }
+        }
     };
-    
-    map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
 
-    
-    function handleNoGeolocation(errorFlag) {
+    //Verifica a localização do usuário a cada 1 segundo
+    locationUser = function(){
+        markerUser.setPosition(null)
+        if(navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            pos = new google.maps.LatLng(position.coords.latitude,
+                                             position.coords.longitude);
+
+            markerUser = new google.maps.Marker({
+              map: map,
+              icon:imageuser
+            });
+            
+            markerUser.setPosition(pos);
+            
+          }, function() {
+            handleNoGeolocation(true);
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleNoGeolocation(false);
+        }
+
+
+    }
+
+    //Nofica o usuário caso a localização não seja identificada
+    handleNoGeolocation = function(errorFlag) {
       if (errorFlag) {
         var content = 'Error: The Geolocation service failed.';
       } else {
-        var content = 'Error: Your browser doesn\'t support geolocation.';
+        var content = 'Erro: Seu browser não suporta geolocalização.';
       }
 
       var options = {
         map: map,
-        position: new google.maps.LatLng(60, 105),
+        position: fortaleza,
         content: content
+
       };
 
       var infowindow = new google.maps.InfoWindow(options);
       map.setCenter(options.position);
     }
 
+    initialize();
+
 
     //Lista as rotas que passam em um dados ponto
-    listRoutes = function(){
+    listRoutes = function(data){
+        console.log(data)
 
     };
 
-    //Procura as rotas que passam em um dado ponto
+    //Procura as rotas que passAstux - Avenida Dom Luís, Fortaleza - Ceara, Brazilam em um dado ponto
     searchRoutesPoint = function(){
       google.maps.event.addListener(autocompleteAddress, 'place_changed', function() {
         var markerAutocomplete = new google.maps.Marker({
@@ -102,28 +171,27 @@ $(document).ready(function(){
         
         var locationPoint = place.geometry.location;
 
-        //$.getJSON("home/routes-by-point/"+locationPoint,listRoutes);
+        point= locationPoint.Za+","+locationPoint.$a
+        //point = locationPoint
+
+        $.getJSON("home/routes-by-point/"+point,listRoutes);
+        //$.getJSON("home/routes-by-point/"+point,listRoutes);
 
       });
 
     }
 
-    //Autocomplete de Rotas========================================================
+    //Autocomplete de Rotas ========================================================
 
     var input = document.getElementById('search_address');
     var autocompleteAddress = new google.maps.places.Autocomplete(input);
+    console.log(autocompleteAddress)
     autocompleteAddress.bindTo('bounds', map);
     searchRoutesPoint();
 
     //FIM Autocomplete de Rotas ===========================================================
 
-    cleanMap = function(structure){
-        if (structure) {
-            for (i in structure) {
-              structure[i].setMap(null);
-            }
-        }
-    };
+    
 
     printStopMap = function(data){    
         for (i in data) {
@@ -198,7 +266,7 @@ $(document).ready(function(){
     
     
     $("#search_route").autocomplete({
-        source: "/home/search",
+        source: "/home/name-route",
         minLength: 2,
         autoFocus: true,
         
@@ -246,5 +314,9 @@ $(document).ready(function(){
           $.getJSON("/home/coord-route/"+ui.item.id,printRoute)
       }
     });*/
+    
+
+    //Verifica a localização do usuário a cada 1 segundo
+    window.setInterval(locationUser, 4000);
 
 });

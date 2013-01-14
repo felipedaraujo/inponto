@@ -5,10 +5,11 @@ InPonto::Application.routes.draw do
   #match "home/:id",             :to => "home#index"
   match "home/point-layer",     :to => "home#point_layer"
   #match "home/kml",            :to => "home#kml"
-  match "home/search",          :to => "home#search_name_route"
+  match "home/name-route",      :to => "home#search_name_route"
   match "home/coord-route/:id", :to => "home#search_coord_route"
   match "home/point-stop/",     :to => "home#point_layer_dinamic"
-  match "home/routes-by-point/",:to => "home#search_route_point"
+  
+  match "home/routes-by-point/:point",:to => "home#search_route_point"
   
   #resources :home do
   #  get :autocomplete_home_name_route, :on => :collection
