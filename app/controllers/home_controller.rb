@@ -38,7 +38,7 @@ class HomeController < ApplicationController
   def search_route_point
     #sql_circle = "st_buildarea(POINT(#{params[:point]}), 300)"
     #sql_circle = "ST_Buffer(ST_GeomFromText('POINT(#{params[:point]})'), 300)"
-    (lat, lon) = params[:point].split(",")
+    (lat, lon) = params[:point].split("%20")
     
     results = Route.select('distinct name_route, cod_route, st_asgeojson(path) as path').where("st_intersects(path, ST_Buffer(ST_GeomFromText('POINT(#{lat} #{lon})', 1))").map{|r| {label: "#{r.name_route}", id: "#{r.cod_route}"}}
 

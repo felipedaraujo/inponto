@@ -171,8 +171,9 @@ $(document).ready(function(){
         
         var locationPoint = place.geometry.location;
 
-        point= locationPoint.Za+","+locationPoint.$a
+        point= locationPoint.Za+"%20"+locationPoint.$a
         //point = locationPoint
+        console.log(point)
 
         $.getJSON("home/routes-by-point/"+point,listRoutes);
         //$.getJSON("home/routes-by-point/"+point,listRoutes);
@@ -185,7 +186,6 @@ $(document).ready(function(){
 
     var input = document.getElementById('search_address');
     var autocompleteAddress = new google.maps.places.Autocomplete(input);
-    console.log(autocompleteAddress)
     autocompleteAddress.bindTo('bounds', map);
     searchRoutesPoint();
 

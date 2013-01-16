@@ -31,6 +31,21 @@ margin: .8em 0 .2em;
 line-height: 1.5;
 }
 
+.navbar .brand{
+
+}
+
+
+.nav form{
+margin-top: 20px;
+}
+
+.nav form input:hover{
+	border: 1px solid red;
+}
+
+
+
 /*
 .infowindow_style {
 width:350px;
