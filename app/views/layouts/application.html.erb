@@ -1,19 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>inPonto</title>
-  <%= stylesheet_link_tag "application", :media => "all" %>
-  
-  <%= javascript_include_tag "application" %>
+	<meta property="og:title" content="inPonto, sua b&#xfa;ssula de transportes p&#xfa;blicos" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://inponto.com.br" />
+	<meta property="og:image" content="http://www.facebook.com/photo.php?fbid=348991261856823&amp;set=a.173461939409757.41421.173457479410203&amp;type=1&amp;theater" />
+	<meta property="og:site_name" content="inPonto" />
+	<meta property="fb:admins" content="100001152335846" />
+  	
+  	<title>inPonto</title>
+	
+	<%= stylesheet_link_tag "application", :media => "all" %>
 
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script>
+	<%= javascript_include_tag "application" %>
 
-  <%= csrf_meta_tags %>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script>
+
+	<%= csrf_meta_tags %>
   
   
 
 </head>
 <body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <%= yield %>
 </body>
 </html>

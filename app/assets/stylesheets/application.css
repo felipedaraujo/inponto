@@ -12,7 +12,7 @@
  *= require_tree .
 */
 
-html,body,#map_canvas {
+html,body{
 height:100%;
 font-family:'lucida grande',tahoma,verdana,arial,sans-serif;
 font-size:14px;
@@ -21,7 +21,10 @@ padding:0;
 }
 
 #map_canvas{
-height:94%;	
+height:86%;
+width: 100%;
+float: left;
+
 }
 
 .category {
@@ -31,19 +34,58 @@ margin: .8em 0 .2em;
 line-height: 1.5;
 }
 
-.navbar .brand{
-
-}
-
-
-.nav form{
-margin-top: 20px;
-}
-
 .nav form input:hover{
-	border: 1px solid red;
+border: 1px solid #80BF96;
+}
+.nav form input:focus{
+border: 1px solid #03A64A;
 }
 
+.input-search{
+float: left;
+line-height: 50%;
+margin-left: 10px;
+margin-top:  18px;
+}
+
+
+.shared{
+float:left;
+margin-top: 28px;
+margin-left: 8px;
+}
+
+.open-column{
+visibility: hidden;
+top:121px;
+position:fixed;
+z-index: 2;
+}
+
+.close-column{
+left:358px;
+top:110px;
+position:fixed;
+z-index: 2;
+cursor: pointer
+}
+
+#info-column{
+visibility: visible;
+background-color: #fff;
+height: 86%;
+width: 380px;
+float:left;
+position:absolute;
+z-index: 1;
+border-right: 1px solid #d4d4d4;
+
+}
+
+.header-info-column{
+height: 50px;
+
+}
 
 
 /*

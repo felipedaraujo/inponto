@@ -15,7 +15,27 @@
 //= require_tree
 //= require jquery-ui
 
+//Twitter Sheared
+
+$("#close-column").click(function () {
+  $("#information-column").hide()
+  //$("#information-column").hide()
+  $("#map_canvas").width('100%')
+  
+});
+
+
 $(document).ready(function(){
+
+    //Twitter Shared
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+    
+    //GooglePlus Shared
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
 
     // Create a div to hold the control.
 
@@ -171,11 +191,11 @@ $(document).ready(function(){
         
         var locationPoint = place.geometry.location;
 
-        point= locationPoint.Za+"%20"+locationPoint.$a
+        //point= locationPoint.Za+","+locationPoint.$a
         //point = locationPoint
-        console.log(point)
+        //console.log(point)
 
-        $.getJSON("home/routes-by-point/"+point,listRoutes);
+        $.getJSON("home/routes-by-point/?point="+locationPoint.Za+","+locationPoint.$a,listRoutes);
         //$.getJSON("home/routes-by-point/"+point,listRoutes);
 
       });
@@ -315,7 +335,6 @@ $(document).ready(function(){
       }
     });*/
     
-
     //Verifica a localização do usuário a cada 1 segundo
     window.setInterval(locationUser, 4000);
 

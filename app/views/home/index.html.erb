@@ -1,18 +1,69 @@
-
 <div class="navbar">
-
   <div class="navbar-inner">
     <a class="brand" href="#">
       <img src="logo_inponto.png" width="114" heigth="69"/>
     </a>
+    
     <ul class="nav">
-		<form class="navbar-search pull-left" action="#">
-		  <input id="search_route" type="text" class="span5" placeholder="Digite o nome de uma rota">
-      <input id="search_address" type="text" class="span5" placeholder="Digite um endereco">
-		</form>
+      <form class="navbar-search pull-left" action="#">
+        <div class="input-search">
+  		    <input id="search_route" type="text" class="span5" placeholder="Pesquise um Itinerário de Transporte Público">
+        </div>
+        <div class="input-search">
+          <input id="search_address" type="text" class="span5" placeholder="Pesquise um Endereço">
+        </div>
+  		</form>
+
+      <div class="fb-like shared" data-href="http://inponto.com.br" data-send="false" data-layout="button_count" data-show-faces="true" data-font="verdana"></div>
+
+      <div class="shared">
+         <div class="g-plus" data-href="http://inponto.com.br" data-action="share" data-annotation="bubble"></div>
+      </div>
+
+      <div class="shared">
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://inponto.com.br/" data-text="Você já se perguntou como faço pra chegar na rua fulano de tal pegando um ônibus? Conheça o @inPonto e liberte-se..." data-lang="pt">Tweetar</a>
+      </div>
     </ul>
+  </div>
+</div>  
+
+<a class="btn btn-mini open-column" id="open-column" href="#"><i class="icon-fast-forward"></i> Abrir</a>
+
+<div id="info-column">
+  
+  <div class="header-info-column">
+    <i class="icon-chevron-left close-column" id="close-column"></i>
+  </div>
+  
+  <hr>
+  
+  <div class="body-info-column">
+    <div class="advertise">
+    </div>
+
+    <div class="footer-info-column">
+      <p><a href="">Sobre</a> <a href="">Facebook</a><img src=""/> copyright &copy; 2013 inPonto</br>  Transporte em Tempo Real</p>
+    </div>  
   </div>
 
 </div>
-
+  
 <div id="map_canvas"></div>
+
+<script type="text/javascript">
+
+$("#close-column").click(function () {
+  $("#info-column").toggle()
+  $("#open-column").css({visibility: "visible"})
+});
+
+$("#open-column").click(function () {
+  $("#info-column").toggle()
+  $("#open-column").css({visibility: "hidden"})
+});
+
+$("#body-info-column").heigth(function(){
+  $("#info-column").heigth() - '50px';
+}); 
+
+</script>
