@@ -17,12 +17,7 @@
 
 //Twitter Sheared
 
-$("#close-column").click(function () {
-  $("#information-column").hide()
-  //$("#information-column").hide()
-  $("#map_canvas").width('100%')
-  
-});
+
 
 
 $(document).ready(function(){
@@ -162,9 +157,17 @@ $(document).ready(function(){
 
     //Lista as rotas que passam em um dados ponto
     listRoutes = function(data){
+                
+
         console.log(data)
 
+        $.each(data, function( event, item ) {
+             $("#table_div").append("<tr><td class='btn-link' id='selected_route' value="+item.cod_route+">" + item.name_route + "</td></tr>");
+
+        });
+
     };
+
 
     //Procura as rotas que passAstux - Avenida Dom Luís, Fortaleza - Ceara, Brazilam em um dado ponto
     searchRoutesPoint = function(){
@@ -283,6 +286,12 @@ $(document).ready(function(){
             map.fitBounds(bordas);
         }
     }
+
+    requestCoordRoute = function(id){
+      alert("Segunda verificação!")
+      $.getJSON("/home/coord-route/"+id,printRoute)
+
+    }
     
     
     $("#search_route").autocomplete({
@@ -292,7 +301,8 @@ $(document).ready(function(){
         
         select: function( event, ui ) {
             //updateUrl(ui.item.id+"-fortaleza")            
-            $.getJSON("/home/coord-route/"+ui.item.id,printRoute)
+            //$.getJSON("/home/coord-route/"+ui.item.id,printRoute)
+            requestCoordRoute(ui.item.id)
         }
 
     });

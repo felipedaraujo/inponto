@@ -37,13 +37,24 @@
   
   <hr>
   
-  <div class="body-info-column">
+  <div class="body-info-column" id="body-info-column">
+    
+    <table class="table table-condensed" id="table_div">
+
+    </table>
+
+    
+
     <div class="advertise">
     </div>
 
-    <div class="footer-info-column">
-      <p><a href="">Sobre</a> <a href="">Facebook</a><img src=""/> copyright &copy; 2013 inPonto</br>  Transporte em Tempo Real</p>
-    </div>  
+      
+  </div>
+  <div class="footer-info-column">
+    <p>
+      <a href="">Sobre</a> <a href="">Facebook</a>
+      </br> inPonto copyright &copy; 2013
+    </p>
   </div>
 
 </div>
@@ -51,6 +62,7 @@
 <div id="map_canvas"></div>
 
 <script type="text/javascript">
+
 
 $("#close-column").click(function () {
   $("#info-column").toggle()
@@ -62,8 +74,18 @@ $("#open-column").click(function () {
   $("#open-column").css({visibility: "hidden"})
 });
 
-$("#body-info-column").heigth(function(){
-  $("#info-column").heigth() - '50px';
-}); 
+$("#body-info-column").tinyscrollbar();
+
+$("#selected_route").click(function(){
+  alert("Primeira verificação")
+  requestCoordRoute($("#selected_route").val())
+  
+
+});
+/*$("#body-info-column").heigth(function(){
+  $("#info-column").heigth();
+});*/ 
+
+
 
 </script>
