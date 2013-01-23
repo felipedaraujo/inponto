@@ -22,6 +22,8 @@
 
 $(document).ready(function(){
 
+
+
     //Twitter Shared
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
     
@@ -45,9 +47,13 @@ $(document).ready(function(){
     var markerUser;//marcador da localização do usuário
     var color_route =["#228B22", "#7CFC00"];    
     var fortaleza = new google.maps.LatLng(-3.728394,-38.543395);
+    var place;//endereço pesquisado
 
     
     initialize = function(){
+      
+      //$("#map_canvas").width($("#map_canvas").width()-380);
+
         var mapOptions = {
             zoom: 14,
             minZoom:10,
@@ -96,8 +102,8 @@ $(document).ready(function(){
           handleNoGeolocation(false);
         }
 
-
     }
+        
 
     cleanMap = function(structure){
         if (structure) {
@@ -158,35 +164,47 @@ $(document).ready(function(){
     //Lista as rotas que passam em um dados ponto
     listRoutes = function(data){
                 
-
-        console.log(data)
+        $("#form-destination").css({visibility:"visible"})
+        console.log(place.address_components);
+        $("#destination").val(place.address_components[0].long_name+", "+place.address_components[1].long_name+", "+place.address_components[2].long_name);
+        $("#table_div").empty();
 
         $.each(data, function( event, item ) {
-             $("#table_div").append("<tr><td class='btn-link' id='selected_route' value="+item.cod_route+">" + item.name_route + "</td></tr>");
+
+            $("#table_div").append("<tr><td class='btn-link' id='link_route' value="+item.cod_route+">" + item.name_route + "</td></tr>");
 
         });
 
     };
+    google.maps.event.trigger(map, "resize");
 
 
     //Procura as rotas que passAstux - Avenida Dom Luís, Fortaleza - Ceara, Brazilam em um dado ponto
     searchRoutesPoint = function(){
+  
       google.maps.event.addListener(autocompleteAddress, 'place_changed', function() {
         var markerAutocomplete = new google.maps.Marker({
           map: map
         });
         markerAutocomplete.setVisible(true);
-        input.className = '';
-        var place = autocompleteAddress.getPlace();
+        //input.className = '';
+        place = autocompleteAddress.getPlace();
+        console.log(place);
+        
         if (!place.geometry) {
           // Inform the user that the place was not found and return.
-          input.className = 'notfound';
+
+          openError();
+          $(".address-error").alert();
           return;
+
         }
         // If the place has a geometry, then present it on a map.
         if (place.geometry.viewport) {
+          closeError();
           map.fitBounds(place.geometry.viewport);
         } else {
+          closeError();
           map.setCenter(place.geometry.location);
           map.setZoom(17);  // Why 17? Because it looks good.
         }
@@ -207,8 +225,11 @@ $(document).ready(function(){
 
     //Autocomplete de Rotas ========================================================
 
+    
     var input = document.getElementById('search_address');
+
     var autocompleteAddress = new google.maps.places.Autocomplete(input);
+    //console.log(autocompleteAddress);
     autocompleteAddress.bindTo('bounds', map);
     searchRoutesPoint();
 
@@ -247,9 +268,9 @@ $(document).ready(function(){
 
     updateUrl = function(params){
         
-        local_url = window.location.href
-        window.location.href = null
-        window.location.href = local_url + '?' + params
+        local_url = window.location.href;
+        window.location.href = null;
+        window.location.href = local_url + '?' + params;
     }
 
     printRoute = function(data){
@@ -288,8 +309,8 @@ $(document).ready(function(){
     }
 
     requestCoordRoute = function(id){
-      alert("Segunda verificação!")
-      $.getJSON("/home/coord-route/"+id,printRoute)
+      //alert("Segunda verificação!")
+      $.getJSON("/home/coord-route/"+id,printRoute);
 
     }
     
@@ -348,4 +369,39 @@ $(document).ready(function(){
     //Verifica a localização do usuário a cada 1 segundo
     window.setInterval(locationUser, 4000);
 
+    changeMapSize = function() {
+        var centerMap = map.getCenter();
+    
+        google.maps.event.trigger(map, "resize")
+
+        map.setCenter(centerMap);
+        
+
+    };
+
+    openError = function(){
+        $(".address-error").css({visibility: "visible"});
+    };
+
+    closeError = function(){
+        $(".address-error").css({visibility: "hidden"});
+    };
+
+    closeColumn = function(){
+      $("#info-column").toggle();
+      $("#open-column").css({visibility: "visible"});
+      $("#main_map").css({left:"0px"});       
+      changeMapSize();
+    };
+
+    openColumn = function(){
+      $("#info-column").toggle();
+      $("#open-column").css({visibility: "hidden"});
+      $("#main_map").css({left:"380px"});
+      changeMapSize();
+    };
+    
+
 });
+
+

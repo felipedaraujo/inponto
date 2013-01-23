@@ -39,12 +39,17 @@
   
   <div class="body-info-column" id="body-info-column">
     
-    <table class="table table-condensed" id="table_div">
-
-    </table>
-
+    <form id="form-destination">
+      <fieldset>
+        <input type="text" class="span4" id="origin" placeholder="Digite sua origem">
+        <input type="text" class="span4" id="destination" placeholder="Digite seu destino">
+      </fieldset>
+    </form>
     
-
+    
+    <table class="table table-condensed" id="table_div">
+    </table>
+    
     <div class="advertise">
     </div>
 
@@ -58,34 +63,38 @@
   </div>
 
 </div>
+
+
+
+<div id="main_map">
   
-<div id="map_canvas"></div>
+  <div id="map_canvas">
+  </div>
+
+</div>  
+
+<div class="alert alert-error address-error">  
+  <a class="close close-error" onChange="">×</a>  
+  <strong>Endereço não encontrado!</strong><br>Verifique se foi digitado algo errado.  
+</div>
+
 
 <script type="text/javascript">
 
-
 $("#close-column").click(function () {
-  $("#info-column").toggle()
-  $("#open-column").css({visibility: "visible"})
+  closeColumn();
 });
 
 $("#open-column").click(function () {
-  $("#info-column").toggle()
-  $("#open-column").css({visibility: "hidden"})
+  openColumn();
 });
 
-$("#body-info-column").tinyscrollbar();
-
-$("#selected_route").click(function(){
-  alert("Primeira verificação")
-  requestCoordRoute($("#selected_route").val())
-  
-
+$("#link_route").live('click', function () {
+  requestCoordRoute($(this).attr("value"))
 });
-/*$("#body-info-column").heigth(function(){
-  $("#info-column").heigth();
-});*/ 
 
-
+$(".close-error").click(function() {
+  closeError();
+});
 
 </script>
