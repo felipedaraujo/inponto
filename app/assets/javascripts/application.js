@@ -48,6 +48,7 @@ $(document).ready(function(){
     var color_route =["#228B22", "#7CFC00"];    
     var fortaleza = new google.maps.LatLng(-3.728394,-38.543395);
     var place;//endereço pesquisado
+    var autocompleteAddress;//autocompleta endereços
 
     
     initialize = function(){
@@ -163,10 +164,10 @@ $(document).ready(function(){
 
     //Lista as rotas que passam em um dados ponto
     listRoutes = function(data){
-                
+        openColumn();
         $("#form-destination").css({visibility:"visible"})
         console.log(place.address_components);
-        $("#destination").val(place.address_components[0].long_name+", "+place.address_components[1].long_name+", "+place.address_components[2].long_name);
+        //$("#destination").val(place.address_components[0].long_name+", "+place.address_components[1].long_name+", "+place.address_components[2].long_name);
         $("#table_div").empty();
 
         $.each(data, function( event, item ) {
@@ -181,15 +182,15 @@ $(document).ready(function(){
 
     //Procura as rotas que passAstux - Avenida Dom Luís, Fortaleza - Ceara, Brazilam em um dado ponto
     searchRoutesPoint = function(){
-  
+      console.info(autocompleteAddress);
       google.maps.event.addListener(autocompleteAddress, 'place_changed', function() {
         var markerAutocomplete = new google.maps.Marker({
-          map: map
+          map: map,
+          draggable: true
         });
         markerAutocomplete.setVisible(true);
         //input.className = '';
         place = autocompleteAddress.getPlace();
-        console.log(place);
         
         if (!place.geometry) {
           // Inform the user that the place was not found and return.
@@ -209,6 +210,8 @@ $(document).ready(function(){
           map.setZoom(17);  // Why 17? Because it looks good.
         }
         markerAutocomplete.setPosition(place.geometry.location);
+
+        //google.maps.event.addListener(markerAutocomplete, 'dragend', function(e){});
         
         var locationPoint = place.geometry.location;
 
@@ -225,13 +228,19 @@ $(document).ready(function(){
 
     //Autocomplete de Rotas ========================================================
 
-    
-    var input = document.getElementById('search_address');
+    setElement = function(element){
 
-    var autocompleteAddress = new google.maps.places.Autocomplete(input);
+      //var input = idSearch;
+      autocompleteAddress = new google.maps.places.Autocomplete(element);
+      autocompleteAddress.bindTo('bounds', map);
+      searchRoutesPoint();
+
+    }
+    
+    //var input = document.getElementById('search_address');
     //console.log(autocompleteAddress);
-    autocompleteAddress.bindTo('bounds', map);
-    searchRoutesPoint();
+    
+    
 
     //FIM Autocomplete de Rotas ===========================================================
 
@@ -279,7 +288,7 @@ $(document).ready(function(){
         //bordas armazena as bordas das polilinhas
         //essa informação é usada para centralizar o mapa
         var bordas = new google.maps.LatLngBounds();
-        
+        console.log(data);
         cleanMap(polyline_route);
 
         coord_route = [[],[]];
@@ -290,7 +299,7 @@ $(document).ready(function(){
                 coord_route[i][j] = new google.maps.LatLng(lat, lng);
                 //bordas.extend e bordas.getCenter são métodos para encontrar o centro das rotas
                 bordas.extend(coord_route[i][j]);
-                bordas.getCenter();
+                //bordas.getCenter();
             }
         }
         for (i=0; i < data.length; i++) {
@@ -304,8 +313,10 @@ $(document).ready(function(){
             //polyline_route[i].setMap(map) plota as rotas no mapa
             polyline_route[i].setMap(map);
             //map.fitBounds(bordas) centraliza
-            map.fitBounds(bordas);
+            
         }
+
+        map.fitBounds(bordas);
     }
 
     requestCoordRoute = function(id){
@@ -388,14 +399,14 @@ $(document).ready(function(){
     };
 
     closeColumn = function(){
-      $("#info-column").toggle();
+      $("#info-column").css({visibility: "hidden"});
       $("#open-column").css({visibility: "visible"});
       $("#main_map").css({left:"0px"});       
       changeMapSize();
     };
 
     openColumn = function(){
-      $("#info-column").toggle();
+      $("#info-column").css({visibility: "visible"});
       $("#open-column").css({visibility: "hidden"});
       $("#main_map").css({left:"380px"});
       changeMapSize();

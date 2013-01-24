@@ -10,7 +10,7 @@
   		    <input id="search_route" type="text" class="span5" placeholder="Pesquise um Itinerário de Transporte Público">
         </div>
         <div class="input-search">
-          <input id="search_address" type="text" class="span5" placeholder="Pesquise um Endereço">
+          <input id="search_address" type="text" class="span5 search_address" placeholder="Pesquise um Endereço">
         </div>
   		</form>
 
@@ -41,8 +41,8 @@
     
     <form id="form-destination">
       <fieldset>
-        <input type="text" class="span4" id="origin" placeholder="Digite sua origem">
-        <input type="text" class="span4" id="destination" placeholder="Digite seu destino">
+        <input type="text" class="span4 search_address" id="origin" placeholder="Digite sua origem">
+        <input type="text" class="span4 search_address" id="destination " placeholder="Digite seu destino">
       </fieldset>
     </form>
     
@@ -95,6 +95,10 @@ $("#link_route").live('click', function () {
 
 $(".close-error").click(function() {
   closeError();
+});
+
+$(".search_address").focus(function(){
+  setElement(this);
 });
 
 </script>

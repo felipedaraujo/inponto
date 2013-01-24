@@ -21,11 +21,13 @@ padding:0;
 }
 
 #main_map{
-align:"center";
+
 top:91px;
+
 bottom: 0px;
 right: 0px;
-left: 380px;
+/*left: 380px;*/
+left: 0px;
 position: absolute;
 
 }
@@ -69,7 +71,8 @@ margin-left: 8px;
 }
 
 .open-column{
-visibility: hidden;
+/*visibility: hidden;*/
+visibility: visible;
 top:121px;
 position:absolute;
 z-index: 2;
@@ -84,7 +87,8 @@ cursor: pointer;
 }
 
 #info-column{
-visibility: visible;
+/*visibility: visible;*/
+visibility: hidden;
 background: #fff;
 width: 380px;
 float:left;
