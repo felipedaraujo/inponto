@@ -63,11 +63,15 @@ margin-left: 10px;
 margin-top:  18px;
 }
 
-
 .shared{
 float:left;
 margin-top: 28px;
 margin-left: 8px;
+}
+
+html body .info-column .header-info-column .shared iframe{
+visibility: hidden;
+background: #000;
 }
 
 .open-column{

@@ -17,7 +17,19 @@
 
 //Twitter Sheared
 
-
+$.widget("custom.catcomplete", $.ui.autocomplete, {
+  _renderMenu: function( ul, items ) {
+    var that = this
+    var currentCategory = "";
+    $.each( items, function( index, item ) {
+      if ( item.category != currentCategory ) {
+        ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+        currentCategory = item.category;
+      }
+      that._renderItem( ul, item );
+    });
+  }
+});
 
 
 $(document).ready(function(){
@@ -36,7 +48,7 @@ $(document).ready(function(){
 
     // Create a div to hold the control.
 
-    var i = 0, j = 0;
+    var i = 0, j = 0, iterator = 0;//iterator é usado para os marcadores de endereço
     var map;
     var image = '/ponto.png';
     var imageuser = '/userlocation.png';
@@ -49,6 +61,7 @@ $(document).ready(function(){
     var fortaleza = new google.maps.LatLng(-3.728394,-38.543395);
     var place;//endereço pesquisado
     var autocompleteAddress;//autocompleta endereços
+    var markerAutocomplete = [];// marcador do autocomplete de endereços
 
     
     initialize = function(){
@@ -165,9 +178,9 @@ $(document).ready(function(){
     //Lista as rotas que passam em um dados ponto
     listRoutes = function(data){
         openColumn();
-        $("#form-destination").css({visibility:"visible"})
-        console.log(place.address_components);
-        //$("#destination").val(place.address_components[0].long_name+", "+place.address_components[1].long_name+", "+place.address_components[2].long_name);
+        
+        $("#destination").val(place.address_components[0].long_name+", "+place.address_components[1].long_name+", "+place.address_components[2].long_name);
+        
         $("#table_div").empty();
 
         $.each(data, function( event, item ) {
@@ -175,30 +188,30 @@ $(document).ready(function(){
             $("#table_div").append("<tr><td class='btn-link' id='link_route' value="+item.cod_route+">" + item.name_route + "</td></tr>");
 
         });
-
+        //console.log(place.address_components[0].long_name+", "+place.address_components[1].long_name);
+        //$("#destination").val(place.address_components[0].long_name+", "+place.address_components[1].long_name+", "+place.address_components[2].long_name);
     };
-    google.maps.event.trigger(map, "resize");
+    
 
 
-    //Procura as rotas que passAstux - Avenida Dom Luís, Fortaleza - Ceara, Brazilam em um dado ponto
+    //Procura as rotas que passam em um dado ponto
     searchRoutesPoint = function(){
-      console.info(autocompleteAddress);
+
       google.maps.event.addListener(autocompleteAddress, 'place_changed', function() {
-        var markerAutocomplete = new google.maps.Marker({
-          map: map,
-          draggable: true
-        });
-        markerAutocomplete.setVisible(true);
+
+        if(markerAutocomplete[iterator]){
+          markerAutocomplete[iterator].setMap(null);
+        }
+
         //input.className = '';
         place = autocompleteAddress.getPlace();
         
+        // BUG? place.geometry por hora não é reconhecido pelo console do navegador 
         if (!place.geometry) {
           // Inform the user that the place was not found and return.
-
           openError();
           $(".address-error").alert();
           return;
-
         }
         // If the place has a geometry, then present it on a map.
         if (place.geometry.viewport) {
@@ -209,19 +222,22 @@ $(document).ready(function(){
           map.setCenter(place.geometry.location);
           map.setZoom(17);  // Why 17? Because it looks good.
         }
-        markerAutocomplete.setPosition(place.geometry.location);
 
+        markerAutocomplete[iterator] = new google.maps.Marker({
+          position: place.geometry.location,
+          map: map,
+          draggable: true
+        });
+        
+        //markerAutocomplete[iterator].push(markerAut);
+        //markerAutocomplete[iterator].setPosition(place.geometry.location);
+      
         //google.maps.event.addListener(markerAutocomplete, 'dragend', function(e){});
         
         var locationPoint = place.geometry.location;
 
-        //point= locationPoint.Za+","+locationPoint.$a
-        //point = locationPoint
-        //console.log(point)
-
         $.getJSON("home/routes-by-point/?point="+locationPoint.Za+","+locationPoint.$a,listRoutes);
-        //$.getJSON("home/routes-by-point/"+point,listRoutes);
-
+        
       });
 
     }
@@ -229,22 +245,20 @@ $(document).ready(function(){
     //Autocomplete de Rotas ========================================================
 
     setElement = function(element){
-
+      
+      if(element.id == "origin"){
+        iterator = 0;
+      }
+      else{
+        iterator = 1;
+      }
       //var input = idSearch;
       autocompleteAddress = new google.maps.places.Autocomplete(element);
       autocompleteAddress.bindTo('bounds', map);
       searchRoutesPoint();
-
     }
     
-    //var input = document.getElementById('search_address');
-    //console.log(autocompleteAddress);
-    
-    
-
     //FIM Autocomplete de Rotas ===========================================================
-
-    
 
     printStopMap = function(data){    
         for (i in data) {
@@ -268,19 +282,16 @@ $(document).ready(function(){
             southWestLon = map.getBounds().getSouthWest().lng();
             $.getJSON("/home/point-stop/?bounds="+northEastLat+","+northEastLon+","+southWestLat+","+southWestLon,printStopMap);
         }
-        /*else{
-            cleanMap();
-        }*/
     };
 
     google.maps.event.addListener(map, 'idle', boundsMap);
 
-    updateUrl = function(params){
+    /*updateUrl = function(params){
         
         local_url = window.location.href;
         window.location.href = null;
         window.location.href = local_url + '?' + params;
-    }
+    }*/
 
     printRoute = function(data){
         //updateUrl('tutum=')
@@ -288,7 +299,7 @@ $(document).ready(function(){
         //bordas armazena as bordas das polilinhas
         //essa informação é usada para centralizar o mapa
         var bordas = new google.maps.LatLngBounds();
-        console.log(data);
+        
         cleanMap(polyline_route);
 
         coord_route = [[],[]];
@@ -326,18 +337,17 @@ $(document).ready(function(){
     }
     
     
-    $("#search_route").autocomplete({
+    /*$("#search_route").autocomplete({
         source: "/home/name-route",
         minLength: 2,
         autoFocus: true,
         
         select: function( event, ui ) {
             //updateUrl(ui.item.id+"-fortaleza")            
-            //$.getJSON("/home/coord-route/"+ui.item.id,printRoute)
             requestCoordRoute(ui.item.id)
         }
 
-    });
+    });*/
     
 
 
@@ -348,47 +358,28 @@ $(document).ready(function(){
     }
     */
 
-    /*$.widget("custom.catcomplete", $.ui.autocomplete, {
-      _renderMenu: function( ul, items ) {
-        var self = this;
-        //console.log(items);
-        ul.append( "<li class='category'> Rotas </li>");
-        $.each( items, function( index, item ) {
-      
-            self._renderItem( ul, {
-              label: item.label
-            });
-
-        });
-      }
-    });
-
-
     $('#search_route').catcomplete({
      
-      source: "/home/search",
+      source: "/home/name-route",
       minLength: 2,
       autoFocus: true,
       
       select: function( event, ui ) {
-          //updateUrl(ui.item.id+"-fortaleza")
-          console.log(ui.item)         
-          $.getJSON("/home/coord-route/"+ui.item.id,printRoute)
+          
+          requestCoordRoute(ui.item.id)
       }
-    });*/
+    });
     
     //Verifica a localização do usuário a cada 1 segundo
     window.setInterval(locationUser, 4000);
 
     changeMapSize = function() {
         var centerMap = map.getCenter();
-    
         google.maps.event.trigger(map, "resize")
-
         map.setCenter(centerMap);
-        
-
     };
+
+    
 
     openError = function(){
         $(".address-error").css({visibility: "visible"});
@@ -401,6 +392,7 @@ $(document).ready(function(){
     closeColumn = function(){
       $("#info-column").css({visibility: "hidden"});
       $("#open-column").css({visibility: "visible"});
+      $("#form-destination").css({visibility:"hidden"})
       $("#main_map").css({left:"0px"});       
       changeMapSize();
     };
@@ -408,8 +400,10 @@ $(document).ready(function(){
     openColumn = function(){
       $("#info-column").css({visibility: "visible"});
       $("#open-column").css({visibility: "hidden"});
+      $("#form-destination").css({visibility:"visible"})
       $("#main_map").css({left:"380px"});
       changeMapSize();
+      
     };
     
 

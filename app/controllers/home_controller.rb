@@ -11,7 +11,7 @@ class HomeController < ApplicationController
   #Lista de nomes das rotas baseado em uma pesquisa
   def search_name_route
     #results = Route.select("name_route, ST_AsText(path) as path").where('name_route ILIKE ? and sense_way = true', "%#{params[:term]}%").limit(10).map{|r| {label: r.name_route, value:r.cod_route}}
-    results = Route.select('distinct name_route, cod_route').where('name_route ILIKE ? ', "%#{params[:term]}%").limit(10).map{|r| {label: "#{r.name_route}", id: "#{r.cod_route}"}}
+    results = Route.select("distinct name_route, cod_route").where('name_route ILIKE ? ', "%#{params[:term]}%").limit(10).map{|r| {label: "#{r.name_route}", id: "#{r.cod_route}", category: "Rotas"}}
     render json: results
   end
 
