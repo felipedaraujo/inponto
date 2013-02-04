@@ -17,12 +17,12 @@ common: &common
 
 development:
   <<: *common
-  database: inponto
+  database: inponto_development
 
-test:
-  <<: *common
-  database: inponto_test
+#test:
+#  <<: *common
+#  database: inponto_test
 
 production:
   <<: *common
-  database: inponto_production
+  database: inponto
