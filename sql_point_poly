@@ -1,8 +1,0 @@
-﻿--Route.select('distinct name_route, cod_route, st_asgeojson(path) as path').where("st_intersects(path, ST_Buffer(ST_GeomFromText('POINT(-3.739646,-38.539417)', 1)))")
-
-SELECT distinct ST_Distance('POINT(-3.801546 -38.564222)'::geography, path::geography) as dist,
-	name_route, cod_route from routes
-where ST_Distance('POINT(-3.801546 -38.564222)'::geography, path::geography) <= 500	
-order by dist
---where ST_DWithin('POINT(-3.739646 -38.539417)', path, 10)
-
