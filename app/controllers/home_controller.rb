@@ -11,7 +11,7 @@ class HomeController < ApplicationController
   #Lista de nomes das rotas baseado em uma pesquisa
   def search_name_route
     #results = Route.select("name_route, ST_AsText(path) as path").where('name_route ILIKE ? and sense_way = true', "%#{params[:term]}%").limit(10).map{|r| {label: r.name_route, value:r.cod_route}}
-    results = Route.select("distinct name_route, cod_route").where('name_route ILIKE ? ', "%#{params[:term]}%").limit(10).map{|r| {label: "#{r.name_route}", id: "#{r.cod_route}", category: "Rotas"}}
+    results = Route.select("distinct name_route, cod_route").where('name_route ILIKE ? ', "%#{params[:term]}%").limit(10).map{|r| {label: "#{r.name_route}", id: "#{r.cod_route}", category: "Itinerários"}}
     render json: results
   end
 
@@ -36,18 +36,25 @@ class HomeController < ApplicationController
 
   #Rotas que passam em uma determinada localidade
   def search_route_point
-    #sql_circle = "st_buildarea(POINT(#{params[:point]}), 300)"
-    #sql_circle = "ST_Buffer(ST_GeomFromText('POINT(#{params[:point]})'), 300)"
     (lat, lon) = params[:point].split(",")
     
-    #results = Route.select('distinct name_route, cod_route, st_asgeojson(path) as path').where("st_intersects(path, ST_Buffer(ST_GeomFromText('POINT(#{lat} #{lon})', 1))").map{|r| {label: "#{r.name_route}", id: "#{r.cod_route}"}}
-    results = Route.select("distinct ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist,
-      name_route, cod_route").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500").order("dist")
-
-    render json: results
+    # a seguinte linha comentada ordena as rotas por distancia, porém envia como resposta rotas com o mesmo nome
+    #results = Route.select("distinct  name_route, cod_route, ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500").order("dist")
     
+    results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500")
+    render json: results
   end
 
+  def search_route_two_point
+    (latOring, lonOring, latDest, lonDest) = params[:point].split(",")
+     
+     # a seguinte linha comentada ordena as rotas por distancia, porém envia como resposta rotas com o mesmo nome
+     # results = Route.select("distinct ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) as dist_first, ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) as dist_second,
+     #  name_route, cod_route").where("ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) <= 500").order("dist_first").order("dist_second")
+     
+    results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) <= 500")
+    render json: results    
+  end
 
   #Pontos de parada visiveis na tela atual do usuário
   def point_layer_dinamic

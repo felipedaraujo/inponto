@@ -1,13 +1,13 @@
 <div class="navbar">
   <div class="navbar-inner">
-    <a class="brand" href="#">
-      <img src="logo_inponto.png" width="114" heigth="69"/>
-    </a>
+    
+      <img src="/inponto_logo_bar.png" width="114" heigth="57" class="brand"/>
+    
     
     <ul class="nav">
       <form class="navbar-search pull-left" action="#">
         <div class="input-search">
-  		    <input id="search_route" type="text" class="span5" placeholder="Pesquise um Itinerário de Transporte Público">
+  		    <input id="search_route" type="text" class="span5" placeholder="Pesquise um Itinerário de Ônibus ou Topic">
         </div>
         <div class="input-search">
           <input id="search_address" type="text" class="span5 search_address" placeholder="Pesquise um Endereço">
@@ -19,7 +19,7 @@
   </div>
 </div>  
 
-<a class="btn btn-mini open-column" id="open-column" href="#"><i class="icon-fast-forward"></i> Abrir</a>
+<a class="btn btn-mini open-column" id="open-column" href="javascript:void(0)"><i class="icon-fast-forward"></i> Abrir</a>
 
 <div id="info-column">
   
@@ -45,8 +45,15 @@
     
     <form id="form-destination">
       <fieldset>
-        <input type="text" class="span4 search_address" id="origin" placeholder="Digite sua origem">
-        <input type="text" class="span4 search_address" id="destination " placeholder="Digite seu destino">
+        <h5>Como Chegar</h5>
+        <div class="input-address">
+          <img src="/letra0.png" class="letter-icon" />
+          <input type="text" class="span4 search_address" id="origin" placeholder="Digite sua origem">
+        </div>
+        <div class="input-address">
+          <img src="/letra1.png" class="letter-icon" />
+          <input type="text" class="span4 search_address" id="destination" placeholder="Digite seu destino">
+        </div>
       </fieldset>
     </form>
     
@@ -60,9 +67,9 @@
       
   </div>
   <div class="footer-info-column">
-    <p>
-      <a href="">Sobre</a> <a href="">Facebook</a>
-      </br> inPonto copyright &copy; 2013
+    <p class="footer-info">
+      <a href="/about" title="sobre o projeto">Sobre</a> <a href="http://www.facebook.com/inPonto" rel="publisher" target="_blank" title="facebook">Facebook</a>
+      </br> &copy; <b>inPonto</b> 2013
     </p>
   </div>
 
@@ -78,12 +85,14 @@
 </div>  
 
 <div class="alert alert-error address-error">  
-  <a class="close close-error" onChange="">×</a>  
+  <a class="close close-error">×</a>  
   <strong>Endereço não encontrado!</strong><br>Verifique se foi digitado algo errado.  
 </div>
 
 
 <script type="text/javascript">
+
+var hover = true;
 
 $("#close-column").click(function () {
   closeColumn();
@@ -93,13 +102,18 @@ $("#open-column").click(function () {
   openColumn();
 });
 
-$("#link_route").live('click', function () {
-  requestCoordRoute($(this).attr("value"))
+$(".link_route").live('click', function () {
+
+  requestCoordRoute($(this).attr("value"));
+  
 });
 
-$("#link_route").hover(function () {
-    requestCoordRoute($(this).attr("value"))
-});
+/* 
+if (hover){
+  $(".link_route").live('', function () {
+      requestCoordRoute($(this).attr("value"));
+  });
+}*/
 
 $(".close-error").click(function() {
   closeError();

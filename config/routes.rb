@@ -10,6 +10,9 @@ InPonto::Application.routes.draw do
   match "home/point-stop/",     :to => "home#point_layer_dinamic"
   
   match "home/routes-by-point/",:to => "home#search_route_point"
+  match "home/routes-bytwo-point", :to => "home#search_route_two_point"
+
+  match "about",                 :to => "about#index"
   
   #resources :home do
   #  get :autocomplete_home_name_route, :on => :collection

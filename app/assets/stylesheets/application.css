@@ -22,7 +22,7 @@ padding:0;
 
 #main_map{
 
-top:91px;
+top:79px;
 
 bottom: 0px;
 right: 0px;
@@ -60,7 +60,7 @@ border: 1px solid #03A64A;
 float: left;
 line-height: 50%;
 margin-left: 10px;
-margin-top:  18px;
+margin-top:  12px;
 }
 
 .shared{
@@ -96,7 +96,7 @@ visibility: hidden;
 background: #fff;
 width: 380px;
 float:left;
-top:91px;
+top:79px;
 bottom:0px;
 position:absolute;
 z-index: 1;
@@ -118,6 +118,28 @@ overflow-y:auto;
 overflow-x:hidden;
 }
 
+.body-info-column h5{
+margin-left: 53px;
+margin-top: -10px;
+}
+
+.letter-icon {
+float:left;
+display: inline-block;
+width: 24px;
+height: 23px;
+margin-right: 5px;
+margin-left: 25px;
+margin-top: 3px;
+  
+}
+
+.input-address{
+width: 380px;
+float: left;
+}
+
+
 #form-destination{
 margin-top: 15px;
 visibility: hidden;
@@ -125,10 +147,14 @@ visibility: hidden;
 }
 
 #form-destination input{
-width: 320px;
-margin: 5px 15px;
+width: 280px;
+
 }
 
+.link_route span{
+width: 300px;
+margin-left:25px;
+}
 
 .advertise{
 /*background: #d4d4d4;*/
@@ -141,13 +167,19 @@ margin: 0 15px;
 .footer-info-column{
 bottom: 0px;
 position: absolute;
-margin: 0 109px;
+border-top: 1px solid #d4d4d4;
 }
 
 .footer-info-column p{
-font-size: 12px;
+margin: 5px 91.5px 5px 91.5px;
+font-size: 15px;
 text-align: center;	
 }
+.footer-info-column p a{
+color: #008930;
+font-weight: 690;
+}
+
 
 .address-error{
 top: 20%;
@@ -158,64 +190,5 @@ z-index: 2;
 visibility:hidden;
 }
 
-/*
-.infowindow_style {
-width:350px;
-height:200px;
-border:1px solid #000;
-}
 
-.title_infowindow {
-font-size:16px;
-}
 
-.title_list {
-background-color:#f9f9f9;
-border-bottom:2px solid #999;
-font-size:13px;
-margin-top:5px;
-}
-
-.list_infowindow {
-width:350px;
-height:130px;
-overflow-y:scroll;
-}
-
-.list_infowindow ul {
-list-style:none;
-}
-
-.list_infowindow a {
-text-decoration:none;
-color:#000;
-}
-
-.list_infowindow a:hover {
-text-decoration:none;
-color:#999;
-}
-
-.name_stop {
-width:350px;
-float:left;
-line-height:4px;
-margin-left:5px;
-}
-
-.number_route {
-width:60px;
-float:left;
-}
-
-.name_route {
-width:325px;
-float:left;
-border:1px solid red;
-}
-
-.time_infowindow {
-width:40px;
-float:left;
-}
-*/
