@@ -11,13 +11,13 @@
 
 common: &common
   adapter: postgresql
-  username: postgres
+  username: ubuntu
   password: inpontopostgres # from psql setup, see Postgresql
   timeout: 5000
 
-development:
-  <<: *common
-  database: inponto_development
+#development:
+#  <<: *common
+#  database: inponto_development
 
 #test:
 #  <<: *common
