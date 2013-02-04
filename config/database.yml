@@ -12,7 +12,7 @@
 common: &common
   adapter: postgresql
   username: postgres
-  password: inpontopostgressenha # from psql setup, see Postgresql
+  password: inpontopostgres # from psql setup, see Postgresql
   timeout: 5000
 
 development:
