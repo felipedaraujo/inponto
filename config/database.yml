@@ -9,11 +9,11 @@
 # Do not set this db to the same as development or production.
 
 
-common: &common
-  #adapter: postgresql
-  username: ubuntu
-  password: inpontopostgres # from psql setup, see Postgresql
-  timeout: 5000
+#common: &common
+#  adapter: postgresql
+#  username: ubuntu
+#  password: inpontopostgres # from psql setup, see Postgresql
+#  timeout: 5000
 
 #development:
 #  <<: *common
@@ -23,6 +23,15 @@ common: &common
 #  <<: *common
 #  database: inponto_test
 
+#production:
+#  <<: *common
+#  database: inponto
+
 production:
-  <<: *common
+  adapter: postgresql
+  encoding: unicode
   database: inponto
+  pool: 5
+  timeout: 5000
+  username: ubuntu
+  password: inpontopostgres
