@@ -13,7 +13,7 @@ development:
   encoding: unicode
   database: postgres
   pool: 5
-  username: inpotno_dev
+  username: inponto_dev
   password: postgres
  
   # Connect on a TCP socket. Omitted by default since the client uses a
@@ -39,13 +39,13 @@ test:
   encoding: unicode
   database: postgres
   pool: 5
-  username: postgres_test
+  username: inponto_test
   password: postgres
  
 production:
   adapter: postgresql
   encoding: unicode
-  database: postgres
+  database: inponto
   pool: 5
-  username: inponto
+  username: postgres
   password: inpontopostgres
