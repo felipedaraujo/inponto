@@ -1,4 +1,6 @@
 InPonto::Application.routes.draw do
+  resources :users
+
   #get "home/index"
   root                          :to => "home#index"
   match "home",                 :to => "home#index"
