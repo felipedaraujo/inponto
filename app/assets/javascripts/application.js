@@ -264,11 +264,12 @@ $(document).ready(function(){
           bordas_location.extend(location_origin);
           bordas_location.extend(location_destin);
           map.fitBounds(bordas_location);
-          $.getJSON("home/routes-bytwo-point/?point="+location_origin.Za+","+location_origin.$a+","+location_destin.Za+","+location_destin.$a,listRoutes);
+          $.getJSON("home/routes-bytwo-point/?point="+location_origin.gb+","+location_origin.hb+","+location_destin.gb+","+location_destin.hb,listRoutes);
           
         } else {
           var location_point = place.geometry.location;
-          $.getJSON("home/routes-by-point/?point="+location_point.Za+","+location_point.$a,listRoutes);  
+          console.log(location_point);
+          $.getJSON("home/routes-by-point/?point="+location_point.gb+","+location_point.hb,listRoutes);  
         }
     };//===========================================================================================
     
