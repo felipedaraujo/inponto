@@ -11,9 +11,9 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: postgres
+  database: inponto
   pool: 5
-  username: inponto_dev
+  username: postgres
   password: postgres
  
   # Connect on a TCP socket. Omitted by default since the client uses a

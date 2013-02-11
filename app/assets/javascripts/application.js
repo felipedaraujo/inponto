@@ -124,34 +124,33 @@ $(document).ready(function(){
     };
 
     setArrow = function(linhas){
-        var r = 0;
-        for(l=0;l<linhas.length;++l)
-        {
-          var linha=linhas[l];
-          for(var s=0;s<linha.length;s+=15,++r)
+        
+          var r = 0;
+          for(l=0;l<linhas.length;++l)
           {
-            
-            var dir=((Math.atan2(linha[s+1].lng()-linha[s].lng(),linha[s+1].lat()-linha[s].lat())*180)/Math.PI)+360,
-                ico=((dir-(dir%3))%120);
-            
-            marker_arrow[r] = new google.maps.Marker({
-              position: linha[s],
-              map: map,
-              icon: new google.maps.MarkerImage('http://maps.google.com/mapfiles/dir_'+ico+'.png',
-                                                  new google.maps.Size(24,24),
-                                                  new google.maps.Point(0,0),
-                                                  new google.maps.Point(12,12)
-                                                )
-            
-            //title: Math.round((dir>360)?dir-360:dir)+'°'
-          });
-
-
+            var linha=linhas[l];
+            for(var s=0;s<linha.length;s+=15,++r)
+            {
+              
+              var dir=((Math.atan2(linha[s+1].lng()-linha[s].lng(),linha[s+1].lat()-linha[s].lat())*180)/Math.PI)+360,
+                  ico=((dir-(dir%3))%120);
+              
+              marker_arrow[r] = new google.maps.Marker({
+                position: linha[s],
+                map: map,
+                icon: new google.maps.MarkerImage('http://maps.google.com/mapfiles/dir_'+ico+'.png',
+                                                    new google.maps.Size(24,24),
+                                                    new google.maps.Point(0,0),
+                                                    new google.maps.Point(12,12)
+                                                  )              
+            });
+            }
           }
-        }
+        
 
       
     };
+
         
 
     cleanMap = function(structure){
@@ -212,7 +211,10 @@ $(document).ready(function(){
     //Lista as rotas que passam em um dados ponto
     listRoutes = function(data){
         
-        openColumn();
+        if (data.length == 0){
+          openError();
+        }
+
         if( id_search_address == "search_address"){
           $("#destination").val(place.address_components[0].long_name+", "+place.address_components[1].long_name+", "+place.address_components[2].long_name);
         };
@@ -228,7 +230,7 @@ $(document).ready(function(){
         // BUG? place.geometry por hora não é reconhecido pelo console do navegador 
         if (!place.geometry) {
           // Inform the user that the place was not found and return.
-          openError();
+          openError("address");
           $(".address-error").alert();
           return;
         }
@@ -239,9 +241,11 @@ $(document).ready(function(){
 
         // If the place has a geometry, then present it on a map.
         if (place.geometry.viewport) {
+          closeError("address");
           closeError();
           map.fitBounds(place.geometry.viewport);
         } else {
+          closeError("address");
           closeError();
           map.setCenter(place.geometry.location);
           map.setZoom(17);  // Why 17? Because it looks good.
@@ -268,10 +272,11 @@ $(document).ready(function(){
           
         } else {
           var location_point = place.geometry.location;
-          console.log(location_point);
           $.getJSON("home/routes-by-point/?point="+location_point.gb+","+location_point.hb,listRoutes);  
         }
     };//===========================================================================================
+
+    //google.maps.event.addListener(marker_autocomplete, 'dragend', function() { alert('marker dragged'); } );
     
 
 
@@ -345,6 +350,10 @@ $(document).ready(function(){
 
         //bordas armazena as bordas das polilinhas
         //essa informação é usada para centralizar o mapa
+
+        closeError("address");
+        closeError();
+
         var bordas = new google.maps.LatLngBounds();
         
         cleanMap(polyline_route);//apaga as rotas que estiverem plotada na tela
@@ -436,12 +445,20 @@ $(document).ready(function(){
 
     
 
-    openError = function(){
+    openError = function(errortype){
+      if(errortype == "address"){
         $(".address-error").css({visibility: "visible"});
+      }else{
+        $(".search-error").css({visibility: "visible"});
+      }
     };
 
-    closeError = function(){
+    closeError = function(errortype){
+      if(errortype == "address"){
         $(".address-error").css({visibility: "hidden"});
+      }else{
+        $(".search-error").css({visibility: "hidden"});
+      }
     };
 
     closeColumn = function(){

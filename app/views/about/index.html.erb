@@ -19,8 +19,8 @@
 			<div class="image-center">
 				<p><img src="/inponto_logo_principal.png" class="img-rounded"></p>
 			</div>
-			<p class="lead">inPonto é um projeto que se dispõe a ser o principal meio de informações sobre o sistema de transportes públicos do Brasil. Utilizando uma apresentação fácil de ser entendida, em sua versão de teste, foram listados os principais itinerários de Fortaleza.</p>
-			<p class="lead">O projeto é uma iniciativa independente, liderada por dois inquietos<a href="#time">(o time).</a> Eles acreditam que podem melhorar o dia-a-dia de milhares de pessoas através de iniciativas como esta, portanto quando quiser nos dar algumas sugestão ou crítica, pode <a href="#contato">falar com a gente.</a></p> 
+			<p class="lead">inPonto é um projeto que se propõe a ser o principal meio de informações sobre o sistema de transportes públicos no Brasil. Utilizando uma apresentação fácil de ser entendida, em sua versão de teste, foram listados os principais itinerários de Fortaleza.</p>
+			<p class="lead">O projeto é uma iniciativa independente, liderada por <a href="#time" title="o time">dois inquietos.</a> Nós acreditamos que podemos melhorar o dia-a-dia de milhares de pessoas através de iniciativas como esta. Se você quiser, pode nos <a href="#contato">enviar sugestões ou críticas.</a></p> 
 
 		</div>
 	</div>
@@ -122,3 +122,15 @@
 		
 	</div>
 </div>
+
+
+<script type="text/javascript">
+
+$('a').click(function() {
+    var elementClicked = $(this).attr("href");
+    var destination = $(elementClicked).offset().top;
+    $("html:not(:animated),body:not(:animated)").animate({ scrollTop: destination-15}, 1000 );
+    return false;
+});
+
+</script>

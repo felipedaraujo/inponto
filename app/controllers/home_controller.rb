@@ -53,6 +53,7 @@ class HomeController < ApplicationController
      #  name_route, cod_route").where("ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) <= 500").order("dist_first").order("dist_second")
      
     results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) <= 500")
+    
     render json: results    
   end
 

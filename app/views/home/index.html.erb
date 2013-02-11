@@ -7,11 +7,11 @@
     <ul class="nav">
       <form class="navbar-search pull-left" action="#">
         <div class="input-search">
-  		    <input id="search_route" type="text" class="span5" placeholder="Pesquise um Itinerário de Ônibus ou Topic">
+  		    <input id="search_route" type="text" class="span6" placeholder="Pesquise um Itinerário de Ônibus ou Topic">
         </div>
-        <div class="input-search">
+        <!--div class="input-search">
           <input id="search_address" type="text" class="span5 search_address" placeholder="Pesquise um Endereço">
-        </div>
+        </div-->
   		</form>
 
       
@@ -36,6 +36,7 @@
     </div-->
 
     <i class="icon-chevron-left close-column" id="close-column"></i>
+    <!--button class="btn getting"><b>Como Chegar</b></button-->
     
   </div>
   
@@ -44,6 +45,7 @@
   <div class="body-info-column" id="body-info-column">
     
     <form id="form-destination">
+      <!--div class="body-info-column" id="body-info-column"-->
       <fieldset>
         <h5>Como Chegar</h5>
         <div class="input-address">
@@ -68,7 +70,7 @@
   </div>
   <div class="footer-info-column">
     <p class="footer-info">
-      <a href="/about" title="sobre o projeto">Sobre</a> <a href="http://www.facebook.com/inPonto" rel="publisher" target="_blank" title="facebook">Facebook</a>
+      <a href="/about" title="sobre o projeto">Sobre</a> &nbsp;|&nbsp; <a href="http://www.facebook.com/inPonto" rel="publisher" target="_blank" title="facebook">Facebook</a>
       </br> &copy; <b>inPonto</b> 2013
     </p>
   </div>
@@ -89,6 +91,11 @@
   <strong>Endereço não encontrado!</strong><br>Verifique se foi digitado algo errado.  
 </div>
 
+<div class="alert alert-error search-error">  
+  <a class="close close-error">×</a>  
+  <strong>Itinerário não encontrado!</strong><br>Não encontramos itinerário entre esses pontos.  
+</div>
+
 
 <script type="text/javascript">
 
@@ -102,13 +109,20 @@ $("#open-column").click(function () {
   openColumn();
 });
 
-$(".link_route").live('click', function () {
-
-  requestCoordRoute($(this).attr("value"));
-  
+/*
+$(".getting").click(function () {
+  $("#form-destination").css({visibility: "visible"});
 });
 
-/* 
+$(".close-form-destination").click(function () {
+  $("#form-destination").css({visibility: "hidden"});
+});
+
+$(".link_route").live('click', function () {
+  requestCoordRoute($(this).attr("value"));
+});
+
+
 if (hover){
   $(".link_route").live('', function () {
       requestCoordRoute($(this).attr("value"));
