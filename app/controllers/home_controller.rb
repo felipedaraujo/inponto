@@ -24,13 +24,13 @@ class HomeController < ApplicationController
      ActiveSupport::JSON.decode(value[:path])["coordinates"]
     end
     
-    respond_to do |format|
-      format.html do
-        render controller: "home", action: "index"
-        #render json: results
-      end
-      format.json{render json: results}
-    end
+    #respond_to do |format|
+     # format.html do
+        #render controller: "home", action: "index"
+        render json: results
+      #end
+      #format.json{render json: results}
+    #end
 
   end
 
