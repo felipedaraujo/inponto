@@ -37,9 +37,9 @@ development:
 test:
   adapter: postgresql
   encoding: unicode
-  database: postgres
+  database: inponto_test
   pool: 5
-  username: inponto_test
+  username: postgres
   password: postgres
  
 production:

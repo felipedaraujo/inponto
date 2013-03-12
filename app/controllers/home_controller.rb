@@ -6,7 +6,12 @@ class HomeController < ApplicationController
   def index
     
       
-  end 
+  end
+
+  def mobile
+    format.html  { redirect_to "home/mobile" }
+    
+  end
 
   #Lista de nomes das rotas baseado em uma pesquisa
   def search_name_route
@@ -38,23 +43,97 @@ class HomeController < ApplicationController
   def search_route_point
     (lat, lon) = params[:point].split(",")
     
-    # a seguinte linha comentada ordena as rotas por distancia, porém envia como resposta rotas com o mesmo nome
-    #results = Route.select("distinct  name_route, cod_route, ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500").order("dist")
+    #AS LINHA A SEGUIR RETORNAM ROTAS ORDENADAS POR DISTANCIA
+    #transport_station = PointStop.select("ST_AsText(coord_desc) as coord_desc").where("type = 2").map do |e|
+    #  sql_results = "SELECT name_route, cod_route, ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) as dist FROM (select distinct on (name_route) name_route, cod_route, path::geography,ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) as dist from routes WHERE (ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('#{e[:coord_desc]}'::geography, path::geography) <= 50)) subselect  ORDER BY dist"
+    #  results << orig_route_station = ActiveRecord::Base.connection.execute(sql_results)
+    #end
     
     results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500")
     render json: results
   end
 
   def search_route_two_point
+
     (latOring, lonOring, latDest, lonDest) = params[:point].split(",")
      
-     # a seguinte linha comentada ordena as rotas por distancia, porém envia como resposta rotas com o mesmo nome
-     # results = Route.select("distinct ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) as dist_first, ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) as dist_second,
-     #  name_route, cod_route").where("ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) <= 500").order("dist_first").order("dist_second")
-     
     results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) <= 500")
-    
-    render json: results    
+
+    if(results == [])
+      
+      lat1, lon1, lat2, lon2 = latOring, lonOring, latDest, lonDest
+
+      
+      for i in 1..2  do
+
+        if i == 1
+          lat, lon = lat1, lon1
+        else
+          lat, lon = lat2, lon2
+        end
+        
+        #Lista de terminais (stations) que possuem ônibus que passam na DESTINO 
+        #::OBS:: Essa pesquisa pode ser melhorada ao máximo para parecer com o resultado de "st_acess_dest.uniq!"
+        acess_local = Route.select("distinct name_route, station").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500").map! {|r| r[:station]}
+
+        #Lista de terminais (stations) que possuem ônibus que passam na origem ORGANIZADA
+        st_acess = acess_local.join(",").gsub(/;/,",").gsub(/,,/,",").split(",").map! {|prefix| prefix.prepend('TER.FOR.')}
+        st_acess.uniq!
+
+        #Lista de todos os terminais (stations) por ordem de proximidade da origem
+        st_near = PointStop.select("cod_point, ST_AsText(coord_desc) as coord_desc, ST_Distance('POINT(#{lat} #{lon})'::geography, coord_desc::geography) as dist").where("refer = 2").order("dist").map! {|n|
+          n[:cod_point]}
+
+        #array_temp = st_near - st_acess
+        st_list_dest = st_near - (st_near - st_acess)
+
+        if i == 1
+          st_list_oring = st_list_dest
+        end
+
+      end
+
+      st_integration = st_list_oring & st_list_dest
+
+      results << [PointStop.select("next_to, ST_AsText(coord_desc) as coord_desc").where("cod_point = '#{st_integration[0]}'").first]
+
+      for i in 1..2  do
+
+        if i == 1
+          lat, lon = lat1, lon1
+        else
+          lat, lon = lat2, lon2
+        end
+        
+        st_integration.first(1).each do |st|
+
+          coord_st = PointStop.select("ST_AsText(coord_desc) as coord_desc").where("cod_point = '#{st}'")
+          
+          station = st.split('.').last
+          
+          #Captura a 'hora atual'
+          daybreak = "#{Time.now.localtime.hour}#{Time.now.localtime.min}".to_i
+          
+          #Se a 'hora atual' for as 00:00 e 05:20 será feita a consulta a seguir
+          if (0 < daybreak and daybreak < 520)
+
+            sql_results = "SELECT name_route, cod_route, ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist FROM (select distinct on (name_route) name_route, cod_route, path::geography,ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist from routes WHERE (ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500 AND ST_Distance('#{coord_st.first[:coord_desc]}'::geography, path::geography) <= 50 AND station ILIKE '%#{station}%' AND name_route ILIKE '%Corujão%')) subselect  ORDER BY dist LIMIT 3"
+            results << ActiveRecord::Base.connection.execute(sql_results)
+          end
+
+          #Se a 'hora atual' não for de madrugada, não retornará 'itineráios corujão'
+          sql_results = "SELECT name_route, cod_route, ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist FROM (select distinct on (name_route) name_route, cod_route, path::geography,ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist from routes WHERE (ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500 AND ST_Distance('#{coord_st.first[:coord_desc]}'::geography, path::geography) <= 50 AND station ILIKE '%#{station}%' AND name_route NOT ILIKE '%Corujão%')) subselect  ORDER BY dist LIMIT 3"
+          results << ActiveRecord::Base.connection.execute(sql_results)
+
+        end
+      end
+
+
+      
+    end
+
+    render json: results
+
   end
 
   #Pontos de parada visiveis na tela atual do usuário
@@ -65,6 +144,7 @@ class HomeController < ApplicationController
     
     results = PointStop.select("st_asgeojson(coord_desc) as coord_desc").where ("st_intersects(coord_desc, 'POLYGON((#{bounds.join(',')}))')")
     
+
     results.map! do |value|
       ActiveSupport::JSON.decode(value[:coord_desc])["coordinates"]
     end

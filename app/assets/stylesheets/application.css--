@@ -1,0 +1,444 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+*/
+
+html,body{
+height:100%;
+font-family:'lucida grande',tahoma,verdana,arial,sans-serif;
+font-size:14px;
+margin:0;
+padding:0;
+}
+
+
+.input-search{
+float: left;
+line-height: 50%;
+margin-left:  10px;
+margin-top:  12px;
+margin-bottom:  12px;
+}
+
+.input-search .span5{
+/*
+border-top-right-radius: 0px;
+border-bottom-right-radius: 0px;
+*/
+}
+
+.input-search .span3{
+/*
+border-top-right-radius: 0px;
+border-bottom-right-radius: 0px;
+*/
+}
+
+.navbar-inner .nav .btn-group{
+margin-top: 17px;
+}
+
+.navbar-inner .nav .btn-group .btn{
+/*
+border-top-left-radius: 0px;
+border-bottom-left-radius: 0px;	
+*/
+}
+
+.address-error,
+.search-error{
+top: 22%;
+left: 50%;
+margin-left: -148px;
+text-align: center;
+position:absolute;
+z-index: 2;
+visibility:hidden;
+}
+
+.nav form input:hover{
+border: 1px solid #80BF96;
+}
+.nav form input:focus{
+border: 1px solid #03A64A;
+}
+
+#btn-collapsed{
+position:absolute;
+z-index: 2;
+left: 50%; 	
+bottom: 0px;
+margin-left: -20px;
+}
+
+.input-search #origin{
+display: none;
+}
+
+.input-search #destination{
+display: none;
+}
+
+/*#btn-collapsed .btn{
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+}*/
+
+
+@-ms-viewport {
+  width: device-width;
+}
+
+@media (max-width: 479px) {
+	html body .navbar .navbar-inner .brand{		
+	display: none;
+	}
+
+	html body .navbar .navbar-inner{			
+	padding: 0px;
+
+	}
+
+	html body .navbar .navbar-inner ul{		
+	width: 301px;
+	margin-left: auto;
+    margin-right: auto;
+    float:none;
+	}
+
+	html body .navbar .nav{		
+	margin: 0px;
+	}
+
+	.input-search{
+	margin: 4px 4px;
+	}
+
+	.navbar-inner .nav .btn-group{
+	margin-top: 9px;
+	}
+
+	#main_map{
+	top:55px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	position: absolute;
+	}
+
+	#map_canvas{
+	top:0px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	position: absolute;
+	}
+
+	#info-column{
+	display: none;
+	}
+
+	body .open-column{
+	display: none;
+	}
+
+	.navbar-inner .nav .btn-group .btn{
+	padding-left: 10px;
+	padding-right: 10px;
+
+	}
+
+
+
+
+}
+@media (min-width: 480px) and (max-width: 689px) {
+
+	html body .navbar .navbar-inner .brand{		
+	margin-left: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	}
+
+	#main_map{
+	top:79px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	position: absolute;
+	}
+
+	#map_canvas{
+	top:0px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	position: absolute;
+	}
+
+	#info-column{
+	display: none;
+	}
+
+	body .open-column{
+	display: none;
+	}
+
+}
+
+
+@media (min-width: 690px) and (max-width: 959px) {
+
+	html body .navbar .navbar-inner{			
+	padding-right: 0px;
+	}
+
+	#main_map{
+	top:79px;
+	bottom: 0px;
+	right: 0px;
+	/*left: 380px;*/
+	left: 0px;
+	position: absolute;
+	}
+
+	#map_canvas{
+	top:0px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	position: absolute;
+	}
+
+	/*#info-column{
+	display: none;
+	}
+
+	#btn-collapsed{
+	left: 64px; 	
+	}*/
+
+
+	#info-column{
+	visibility: hidden;
+	background-color:rgba(255,255,255,0.8);
+	position: absolute;
+	width: 380px;
+	height: 360px;
+	left:50%;
+	top: 120px;
+	margin-left: -190px;
+	z-index: 1;
+	border: 1px solid #d4d4d4;	
+	}
+
+	.header-info-column{
+		display: none;
+	}
+
+	.body-info-column{
+		/*display: none;*/
+	}
+
+	.footer-info-column{
+		display: none;
+	}
+	
+	body .open-column{
+	display: none;
+	}
+
+
+}
+
+@media (min-width: 960px) {
+
+	.input-search .span5{
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	}
+
+	.brand{
+	width: 114px;
+	height: 57px;
+	}
+
+	#main_map{
+	top:79px;
+	bottom: 0px;
+	right: 0px;
+	left: 380px;
+	/*left: 0px;*/
+	position: absolute;
+	}
+
+	#map_canvas{
+	top:0px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	position: absolute;
+	}	
+
+	.category {
+	font-weight: bold;
+	padding: .1em .2em;
+	margin: .8em 0 .2em;
+	line-height: 1.5;
+	}
+
+	.shared{
+	float:left;
+	margin-top: 28px;
+	margin-left: 8px;
+	}
+
+	html body .info-column .header-info-column .shared iframe{
+	visibility: hidden;
+	background: #000;
+	}
+
+	.open-column{
+	visibility: hidden;
+	/*visibility: visible;*/
+	top:121px;
+	position:absolute;
+	z-index: 2;
+	}
+
+	.close-column{
+	left:358px;
+	top:25px;
+	position:absolute;
+	z-index: 2;
+	cursor: pointer;
+	}
+
+	#info-column{
+	visibility: visible;
+	background: #fff;
+	width: 380px;
+	float:left;
+	top:79px;
+	bottom:0px;
+	position:absolute;
+	z-index: 1;
+	border-right: 1px solid #d4d4d4;
+	}
+
+	.header-info-column{
+	height: 70px;
+
+	}
+
+	/*
+	.header-info-column .getting{
+	margin-left: 54px;
+	margin-top: 20px;
+	}*/
+
+	.body-info-column{
+	top:71px;
+	bottom: 50px;
+	width: 100%;
+	position: absolute;
+	overflow-y:auto;
+	overflow-x:hidden;
+	}
+
+	.body-info-column h5{
+	margin-left: 53px;
+	margin-top: -10px;
+	}
+
+	.letter-icon {
+	float:left;
+	display: inline-block;
+	width: 24px;
+	height: 23px;
+	margin-right: 5px;
+	margin-left: 25px;
+	margin-top: 3px;
+	  
+	}
+
+	.input-address{
+	width: 380px;
+	float: left;
+	}
+
+
+	#form-destination{
+	margin-top: 15px;
+	visibility: visible;
+	}
+
+	#form-destination input{
+	width: 280px;
+	}
+
+	/*
+	#form-destination p{
+	float: right;
+	font-size: 17px;
+	margin-right: 15px;
+	margin-top: -5px;
+	margin-bottom: 15px;
+	color: #999;
+	font-family: verdana;
+	cursor: pointer;
+	}
+	*/
+
+	.link_route span{
+	width: 300px;
+	margin-left:25px;
+	}
+
+	.advertise{
+	/*background: #d4d4d4;*/
+	border: 1px solid #d4d4d4;
+	height: 300px;
+	width: 330px;
+	margin: 0 15px;
+	}
+
+	.footer-info-column{
+	bottom: 0px;
+	position: absolute;
+	border-top: 1px solid #d4d4d4;
+	}
+
+	.footer-info-column p{
+	margin: 5px 91.5px 5px 91.5px;
+	font-size: 14px;
+	text-align: center;	
+	}
+	.footer-info-column p a{
+	color: #008930;
+	font-weight: 690;
+	}
+
+	/*Mobile*/
+
+	li .btn-group{
+		display: none;
+	}
+
+	#btn-collapsed{
+		display: none;
+	}
+
+	
+
+}
+
+
