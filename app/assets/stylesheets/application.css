@@ -23,6 +23,26 @@ html body{
 body a:visited{
 	color:#03A64A;
 }
+
+.tab-content .body-info-column .link_route{
+	color:#03A64A;
+}
+
+body [class^="icon-"],
+body [class*=" icon-"] {
+	background-image: url("/glyphicons-halflings.png");
+}
+
+.control-group .search_address:focus,
+.control-group .search_route:focus{
+    border-color: rgba(1, 64, 17, 0.6);
+	outline: 0;
+	outline: thin dotted 9;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(3, 166, 74, 0.6);
+	-moz-box-shadow:  inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(3, 166, 74, 0.6);
+	box-shadow: inset  inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(3, 166, 74, 0.6);
+}
+
 #info-column{
 	bottom: 20px;
 	display: none;
