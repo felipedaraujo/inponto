@@ -5,6 +5,7 @@ class CreatePointStops < ActiveRecord::Migration
       t.point :coord_desc
       t.string :next_to
       t.string :route_point
+      t.integer :refer
 
       t.timestamps
     end

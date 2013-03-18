@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20130204225859) do
     t.column "cod_point", :string
     t.column "next_to", :string
     t.column "route_point", :string
+    t.column "refer", :integer
     t.column "created_at", :datetime, :null => false
     t.column "updated_at", :datetime, :null => false
     t.column "coord_desc", :point
@@ -41,9 +42,10 @@ ActiveRecord::Schema.define(:version => 20130204225859) do
     t.column "name_route", :string
     t.column "sense_way", :boolean
     t.column "price", :string
+    t.column "station", :string
     t.column "created_at", :datetime, :null => false
     t.column "updated_at", :datetime, :null => false
-    t.column "path", :line_string, :srid => 4269
+    t.column "path", :line_string
   end
 
   create_table "transports", :force => true do |t|

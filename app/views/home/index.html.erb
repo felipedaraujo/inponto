@@ -1,88 +1,77 @@
 <div class="navbar">
   <div class="navbar-inner">
-    
-      <img src="/inponto_logo_bar.png" width="114" heigth="57" class="brand"/>
-    
-    
-    <ul class="nav">
-      <form class="navbar-search pull-left" action="#">
-        <div class="input-search">
-  		    <input id="search_route" type="text" class="span6" placeholder="Pesquise um Itinerário de Ônibus ou Topic">
+    <div class="container">
+ 
+      <a class="brand" href="#"><img src="/inponto_logo_bar_w.png"></a>
+ 
+      <form class="form-horizontal">
+        
+        <div class="control-group">
+          <input type="text" id="input-route" class="search_route main-input span5" placeholder="Pesquise um Itinerário">
+
+          <input type="text" id="origin" class="search_address main-input span5" placeholder="Digite sua origem">
+
+          <div class="btn-group">
+            <a id="getting-btn" class="btn active"><i class="icon-map-marker"></i></a>
+            <a id="itinerary-btn" class="btn" ><i class="icon-bus"></i></a>            
+          </div>
         </div>
-        <!--div class="input-search">
-          <input id="search_address" type="text" class="span5 search_address" placeholder="Pesquise um Endereço">
-        </div-->
-  		</form>
+          
+        <div class="control-group control-destination">
+          <input type="text" id="destination" class="search_address main-input span5" placeholder="Digite seu destino">
+            
+          <a class="btn active open-column"><i class="open-icon icon-chevron-up"></i></a>
+        </div>
 
-      
-    </ul>
-  </div>
-</div>  
-
-<a class="btn btn-mini open-column" id="open-column" href="javascript:void(0)"><i class="icon-fast-forward"></i> Abrir</a>
-
-<div id="info-column">
-  
-  <div class="header-info-column">
-    <!-- Icons Share -->
-    <!--div class="fb-like shared" data-href="http://inponto.com.br" data-send="false" data-layout="button_count" data-show-faces="true" data-font="verdana"></div>
-
-    <div class="shared">
-       <div class="g-plus" data-href="http://inponto.com.br" data-action="share" data-annotation="bubble"></div>
+      </form>
+ 
     </div>
-
-    <div class="shared">
-      <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://inponto.com.br/" data-text="Você já se perguntou como faço pra chegar na rua fulano de tal pegando um ônibus? Conheça o @inPonto e liberte-se..." data-lang="pt">Tweetar</a>
-    </div-->
-
-    <i class="icon-chevron-left close-column" id="close-column"></i>
-    <!--button class="btn getting"><b>Como Chegar</b></button-->
-    
   </div>
-  
-  <hr>
-  
-  <div class="body-info-column" id="body-info-column">
-    
-    <form id="form-destination">
-      <!--div class="body-info-column" id="body-info-column"-->
-      <fieldset>
-        <h5>Como Chegar</h5>
-        <div class="input-address">
-          <img src="/letra0.png" class="letter-icon" />
-          <input type="text" class="span4 search_address" id="origin" placeholder="Digite sua origem">
-        </div>
-        <div class="input-address">
-          <img src="/letra1.png" class="letter-icon" />
-          <input type="text" class="span4 search_address" id="destination" placeholder="Digite seu destino">
-        </div>
-      </fieldset>
-    </form>
-    
-    
-    <table class="table table-condensed" id="table_div">
-    </table>
-    
-    <!--div class="advertise">
-    </div-->
-
-      
-  </div>
-  <div class="footer-info-column">
-    <p class="footer-info">
-      <a href="/about" title="sobre o projeto">Sobre</a> &nbsp;|&nbsp; <a href="http://www.facebook.com/inPonto" rel="publisher" target="_blank" title="facebook">Facebook</a>
-      </br> &copy; <b>inPonto</b> 2013
-    </p>
-  </div>
-
 </div>
 
 
 
+<div class="tabbable" id="info-column">
+
+  <ul class="nav nav-tabs">
+    <li class="pull-right"></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+        <div class="header-info-column">
+          <!-- Icons Share -->
+          <!--div class="fb-like shared" data-href="http://inponto.com.br" data-send="false" data-layout="button_count" data-show-faces="true" data-font="verdana"></div>
+
+          <div class="shared">
+             <div class="g-plus" data-href="http://inponto.com.br" data-action="share" data-annotation="bubble"></div>
+          </div>
+
+          <div class="shared">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://inponto.com.br/" data-text="Você já se perguntou como faço pra chegar na rua fulano de tal pegando um ônibus? Conheça o @inPonto e liberte-se..." data-lang="pt">Tweetar</a>
+          </div-->
+
+        </div>
+        <h5>Itinerários</h5>
+        <div class="body-info-column" id="body-info-column">
+          
+          <table class="table table-condensed" id="table_div">
+          </table>
+            
+        </div>
+        <div class="footer-info-column">
+          <p class="footer-info">
+            <a href="http://www.facebook.com/inPonto" rel="publisher" target="_blank" title="facebook" class="btn-link">facebook.com/inponto</a>
+            </br> &copy; <b>inponto</b> 2013
+          </p>
+        </div>
+
+    </div>
+  </div>
+</div>
+
 <div id="main_map">
   
-  <div id="map_canvas">
-  </div>
+  <div id="map_canvas"></div>    
 
 </div>  
 
@@ -99,42 +88,9 @@
 
 <script type="text/javascript">
 
-var hover = true;
-
-$("#close-column").click(function () {
-  closeColumn();
-});
-
-$("#open-column").click(function () {
-  openColumn();
-});
-
-/*
-$(".getting").click(function () {
-  $("#form-destination").css({visibility: "visible"});
-});
-
-$(".close-form-destination").click(function () {
-  $("#form-destination").css({visibility: "hidden"});
-});
-
-$(".link_route").live('click', function () {
-  requestCoordRoute($(this).attr("value"));
-});
-
-
-if (hover){
-  $(".link_route").live('', function () {
-      requestCoordRoute($(this).attr("value"));
-  });
-}*/
-
-$(".close-error").click(function() {
-  closeError();
-});
-
 $(".search_address").focus(function(){
   setElement(this);
 });
+
 
 </script>
