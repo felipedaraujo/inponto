@@ -18,11 +18,14 @@
 
 var i = 0, j = 0, iterator = 0;//iterator é usado para os marcadores de endereço
 var map,
+    icon_station = '/marker_blue.png',
     marker_arrow = [],
     polyline_route = [],
     color_route =["#636af2", "#0c1290"],
     autocompleteAddress,//autocompleta endereços
-    marker_autocomplete = [];// marcador do autocomplete de endereços
+    markerStation,
+    marker_position = [],// marcador do autocomplete de endereços
+    place;//endereço pesquisado
 
 
 $.widget("custom.catcomplete", $.ui.autocomplete, {
@@ -31,7 +34,9 @@ $.widget("custom.catcomplete", $.ui.autocomplete, {
     var currentCategory = "";
     $.each( items, function( index, item ) {
       if ( item.category != currentCategory ) {
-        ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+
+        ul.removeClass("ui-menu ui-widget").addClass("autocomplete");
+        //ul.append( "<li class='category'><b>" + item.category + "</b></li>" );
         currentCategory = item.category;
       }
       that._renderItem( ul, item );
@@ -43,16 +48,12 @@ $.widget("custom.catcomplete", $.ui.autocomplete, {
 
 $(document).ready(function(){
 
-    //Verifica o tamnho da tela e atribui o tamnho do campo de busca adequado
-    //$("#search_route").attr('class', '');
-
-    
+    //Verifica o tamanho da tela e atribui o tamanho do campo de busca adequado
     if ($(window).width() > 767){
       $(".main-input")
         .removeClass("span3")
         .addClass("span5");
-        $("#info-column").css("width","460px");
-
+        $("#info-column").css("width","466px");
     }else{
       $(".main-input")
         .removeClass("span5")
@@ -60,16 +61,14 @@ $(document).ready(function(){
       $("#info-column").css("width","290px");
     }
 
-    if ($(window).width() < 480){
+    if ($(window).width() < 481){
       $(".brand").css("display","none");
-
     }
 
     $("#itinerary-btn").click(function() {
       $("#getting-btn").removeClass("active");
       $("#itinerary-btn").addClass("active");
-      $(".search_address").css("display", "none");
-      $("#input-route").css("display", "inline");
+      closeDestination();
     });
 
     $("#getting-btn").click(function() {
@@ -77,6 +76,7 @@ $(document).ready(function(){
       $("#getting-btn").addClass("active");
       $("#input-route").css("display", "none");
       $("#origin").css("display", "inline");
+      $("#origin").focus();
     });
 
     $(".close-column").click(function() {
@@ -85,7 +85,7 @@ $(document).ready(function(){
 
     $(".open-column").click(function(){
 
-      if ($(".tab-content").css("display") == "none"){
+      if ($("#info-column").css("display") == "none"){
         openColumn();
       }else{
         closeColumn();
@@ -115,11 +115,8 @@ $(document).ready(function(){
         marker_stops = [],
         markerUser,//marcador da localização do usuário
         coord_route = [[]],
-            
         fortaleza = new google.maps.LatLng(-3.728394,-38.543395),
-        place,//endereço pesquisado
-        //autocompleteAddress,//autocompleta endereços
-        //marker_autocomplete = [],// marcador do autocomplete de endereços
+        
         id_search_address,//id do campo de busca por endereço
         directionsService = new google.maps.DirectionsService();
 
@@ -141,11 +138,11 @@ $(document).ready(function(){
               style: google.maps.ZoomControlStyle.SMALL, 
             position: google.maps.ControlPosition.RIGHT_TOP 
           },
-          mapTypeControl: true,
-          mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-            position: google.maps.ControlPosition.RIGHT_BOTTOM 
-          },
+          mapTypeControl: false,
+          //mapTypeControlOptions: {
+          //  style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+          //  position: google.maps.ControlPosition.RIGHT_BOTTOM 
+          //},
           
           mapTypeId: google.maps.MapTypeId.ROADMAP,
 
@@ -199,7 +196,6 @@ $(document).ready(function(){
               map: map,
               icon:imageuser
             });
-            
             markerUser.setPosition(pos);
             
           }, function() {
@@ -266,10 +262,6 @@ $(document).ready(function(){
         window.location.href = null;
         window.location.href = local_url + '?' + params;
     }*/
-
-    
-
-    
     
     /*$("#search_route").autocomplete({
         source: "/home/name-route",
@@ -292,9 +284,7 @@ $(document).ready(function(){
     $('.search_route').catcomplete({
      
       source: "/home/name-route",
-      minLength: 2,
-      autoFocus: true,
-      
+      minLength: 2,      
       select: function( event, ui ) {
           
           requestCoordRoute(ui.item.id);
@@ -304,8 +294,6 @@ $(document).ready(function(){
     //Verifica a localização do usuário a cada 1 segundo
     //window.setInterval(locationUser, 4000);
 
-    
-
 });
 
 //Ao redimensionar a tela::
@@ -313,12 +301,17 @@ $(document).ready(function(){
 $(window).resize(function(){
     
     $(".brand").css("display","block");
+    if ($(".control-destination").css("display") == "none"){
+      $("#main_map").css("top","54px");
+    }else{
+      $("#main_map").css("top","90px");
+    }
 
     if ($(window).width() > 767){
       $(".main-input")
         .removeClass("span3")
         .addClass("span5");
-      $("#info-column").css("width","460px");
+      $("#info-column").css("width","466px");
     }else{
       $(".main-input")
         .removeClass("span5")
@@ -326,9 +319,13 @@ $(window).resize(function(){
       $("#info-column").css("width","290px");
     }
 
-    if ($(window).width() < 480){
+    if ($(window).width() < 481){
       $(".brand").css("display","none");
-
+      if ($(".control-destination").css("display") == "none"){
+        $("#main_map").css("top","49px");
+      }else{
+        $("#main_map").css("top","85px");
+      }
     }
 });
 
@@ -351,22 +348,78 @@ function closeError(errortype){
 
 
 function openColumn(){
-
-
-  if ($(".tab-content").css("display") == "none"){
-    $(".tab-content").toggle('slow', function(){
-      $(".open-column").addClass("active");
-    });
+  if($("#info-column").css("display") == "none"){
+    $("#info-column").slideToggle('slow');
+    $(".open-column").addClass("active");
+    $(".open-icon").removeClass("icon-chevron-down").addClass("icon-chevron-up");
   }
-
 };
 
 function closeColumn(){
-  $(".tab-content").toggle('slow',function(){
-    $(".open-column").removeClass("active");  
-  });
+  if($("#info-column").css("display") == "block"){
+    $("#info-column").slideToggle('slow',function(){
+      $(".open-column").removeClass("active");  
+      $(".open-icon").removeClass("icon-chevron-up").addClass("icon-chevron-down");
+    });
+  }
+  
   
 };
+
+
+function openDestination(){
+  $(".control-destination").css("display",function(){
+    if ($(window).width() < 481){
+      $("#main_map").css("top","85px");
+    }else{
+      $("#main_map").css("top","90px");
+    }
+    openColumn();
+    return "block";
+  });
+  $("#destination").focus();
+};
+
+function closeDestination(){
+  
+  $("#main_map").css("top",function(){
+    closeColumn();
+    $("#destination").val("");
+    $(".control-destination").css("display", "none");
+    if ($(window).width() < 481){
+      return "49px";
+    }else{
+      return "54px";
+    }
+  });
+  $("#origin").val("").css("display", "none");
+  $(".pac-container").remove();
+  $("#input-route").css("display", "inline");
+  $("#input-route").focus();
+
+    
+  for (var i = 0; i < marker_position.length; i++) {
+    marker_position[i].setMap(null);
+  };
+  marker_position = [];
+};
+
+//Plota o terminalno mapa
+function setStation(pos){
+  if (marker_position[2]){
+    marker_position[2].setMap(null);  
+  }  
+  pos_station = new google.maps.LatLng(parseFloat(pos.coord_desc.slice(6,-1).split(/ /g)[0]),
+                                             parseFloat(pos.coord_desc.slice(6,-1).split(/ /g)[1]));
+  marker_position[2] = new google.maps.Marker({
+    position: pos_station,
+    map: map,
+    icon:icon_station,
+    title: pos.next_to
+  });
+  
+}
+
 
 //Lista as rotas que passam em um dados ponto
 function listRoutes(data){
@@ -375,44 +428,35 @@ function listRoutes(data){
       openError();
     }
 
-    /*if( id_search_address == "search_address"){
-      $("#destination").val(place.address_components[0].long_name+", "+place.address_components[1].long_name+", "+place.address_components[2].long_name);
-    };*/
-
     // apaga uma lista de rotas que já estavam na coluna esquerda
     $("#table_div").empty();
 
     // identifica o json com rotas integradas ao terminal
     if(data[0][0]){
-      //$("#table_div").append("<h5>Itinerários</h5>");
-      $.each(data, function( event, item ) {
-          $.each(item, function ( cont, element ){
-
-            $("#table_div").append("<tr><td class='btn-link link_route' value="+element.cod_route+"><span>" + element.cod_route + "</span></td></tr>");
+      
+      setStation(data[0][0]);
+      if (data[1].length >= data[2].length){
+        $.each(data[1], function ( cont, element ){   
+          $.each(data[2], function ( cont2, element2 ){
+            $("#table_div").append('<tr><td class="btn-link link_route bus" value='+element.cod_route+' title="'+element.name_route+'"><img src="/bus.png"> <span>'+element.cod_route+'</span></td><td class="arrow"><i class="icon-arrow-right"></i></td><td class="station" title="'+data[0][0].next_to+'"><span><b>T</b><div class="icon- square-station"></div></span></td><td class="arrow"><i class="icon-arrow-right"></i></td><td class="btn-link link_route bus" value='+element2.cod_route+' title="'+element2.name_route+'"><img src="/bus.png"> <span>'+element2.cod_route+'</span></td></tr>');
           });
-      });
-
-
-
+        });
+      }else{
+        $.each(data[2], function ( cont, element ){   
+          $.each(data[1], function ( cont2, element2 ){
+            $("#table_div").append('<tr><td class="btn-link link_route bus" value='+element.cod_route+' title="'+element.name_route+'"><img src="/bus.png"> <span>'+element.cod_route+'</span></td><td class="arrow"><i class="icon-arrow-right"></i></td><td class="station" title="'+data[0][0].next_to+'"><span><b>T</b><div class="icon- square-station"></div></span></td><td class="arrow"><i class="icon-arrow-right"></i></td><td class="btn-link link_route bus" value='+element2.cod_route+' title="'+element2.name_route+'"><img src="/bus.png"> <span>'+element2.cod_route+'</span></td></tr>');
+          });
+        });
+      }
+      openColumn();
     }else{
-
-      //$("#table_div").append("<h5>Itinerários</h5>");
       $.each(data, function( event, item ) {
           $("#table_div").append("<tr><td class='btn-link link_route' value="+item.cod_route+"><span>" + item.name_route + "</span></td></tr>");
       });
 
       //Exibir o segundo campo de busca
+      openDestination();
       
-      //$("#destination").css("display","block");
-      //$(".open-column").css("display","inline");
-      $(".control-destination").css("display","block",function(){
-        $("#info-column").css("display","block");
-        openColumn();
-      });
-
-      //$("#info-column").css("display","block");
-      //openColumn();
-      $("#main_map").css("top","77px");
     }  
 };
 
@@ -442,7 +486,7 @@ function setMarkerAddress(){
       map.setZoom(17);  // Why 17? Because it looks good.
     }
 
-    marker_autocomplete[iterator] = new google.maps.Marker({
+    marker_position[iterator] = new google.maps.Marker({
       position: place.geometry.location,
       map: map,
       draggable: true,
@@ -450,21 +494,20 @@ function setMarkerAddress(){
 
     });
 
-    if (marker_autocomplete[0] && marker_autocomplete[1]) { 
+    if (marker_position[0] && marker_position[1]) { 
       
-      var location_origin = marker_autocomplete[0].position;
-      var location_destin = marker_autocomplete[1].position;     
+      var location_origin = marker_position[0].position;
+      var location_destin = marker_position[1].position;     
       
       var bordas_location = new google.maps.LatLngBounds();
       bordas_location.extend(location_origin);
       bordas_location.extend(location_destin);
       map.fitBounds(bordas_location);
-      $.getJSON("home/routes-bytwo-point/?point="+location_origin.ib+","+location_origin.jb+","+location_destin.ib+","+location_destin.jb,listRoutes);
+      $.getJSON("home/routes-bytwo-point/?point="+location_origin.mb+","+location_origin.nb+","+location_destin.mb+","+location_destin.nb,listRoutes);
       
     } else {
       var location_point = place.geometry.location;
-      
-      $.getJSON("home/routes-by-point/?point="+location_point.ib+","+location_point.jb,listRoutes);  
+      $.getJSON("home/routes-by-point/?point="+location_point.mb+","+location_point.nb,listRoutes);  
     }
 };
 
@@ -472,8 +515,8 @@ function setMarkerAddress(){
 function searchRoutesPoint(){
   
   google.maps.event.addListener(autocompleteAddress, 'place_changed', function() {
-    if(marker_autocomplete[iterator]){
-      marker_autocomplete[iterator].setMap(null);
+    if(marker_position[iterator]){
+      marker_position[iterator].setMap(null);
     }
     place = autocompleteAddress.getPlace();
     setMarkerAddress();
@@ -483,7 +526,6 @@ function searchRoutesPoint(){
 //Autocomplete de Endereços 
 function setElement(element){
 
-  console.log(element);
   id_search_address = element.id;
 
   if(id_search_address == "origin"){
