@@ -15,7 +15,6 @@
 //= require_tree
 //= require jquery-ui
 
-
 var i = 0, j = 0, iterator = 0;//iterator é usado para os marcadores de endereço
 var map,
     icon_station = '/marker_blue.png',
@@ -43,8 +42,6 @@ $.widget("custom.catcomplete", $.ui.autocomplete, {
     });
   }
 });
-
-
 
 $(document).ready(function(){
 
@@ -150,7 +147,6 @@ $(document).ready(function(){
       
       map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
       directionsDisplay.setMap(map);
-
       
       //Primeira captura da localização
       /*if(navigator.geolocation) {
@@ -158,7 +154,6 @@ $(document).ready(function(){
           var pos = new google.maps.LatLng(position.coords.latitude,
                                            position.coords.longitude);
 
-          
           markerUser = new google.maps.Marker({
             map: map,
             icon:imageuser
@@ -208,14 +203,12 @@ $(document).ready(function(){
     };
 
     //Nofica o usuário caso a localização não seja identificada
-    handleNoGeolocation = function(errorFlag) {
-      
+    handleNoGeolocation = function(errorFlag) {      
       /*if (errorFlag) {
         var content = '<p style="text-align:center;">Você terá mais recursos</br> se ativar sua localização.</p>';
       } else {
         var content = 'Erro: Seu browser não suporta geolocalização.';
       }*/
-
       var options = {
         map: map,
         position: fortaleza,
@@ -224,7 +217,7 @@ $(document).ready(function(){
 
       var infowindow = new google.maps.InfoWindow(options);
       map.setCenter(options.position);
-    };//===========================================================================================
+    };
 
     initialize();
 
