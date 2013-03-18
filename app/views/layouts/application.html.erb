@@ -4,7 +4,7 @@
 	<meta property="og:title" content="inponto | seu guia de transportes p&#xfa;blicos" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="http://inponto.com.br" />
-	<meta property="og:image" content="http://www.facebook.com/photo.php?fbid=348991261856823&amp;set=a.173461939409757.41421.173457479410203&amp;type=1&amp;theater" />
+	<meta property="og:image" content="http://sphotos-f.ak.fbcdn.net/hphotos-ak-ash3/549983_425924874163461_1554588493_n.png" />
 	<meta property="og:site_name" content="inponto" />
 	<meta property="fb:admins" content="100001152335846" />
   	
@@ -13,9 +13,13 @@
 	
 	<%= stylesheet_link_tag "application", :media => "all" %>
 
-	<%= javascript_include_tag "application" %>
+
+	
 
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script>
+
+    <%= javascript_include_tag "simulation" %>
+  <%= javascript_include_tag "application" %>
 
 	<%= csrf_meta_tags %>
 </head>
