@@ -16,15 +16,15 @@
 //= require jquery-ui
 
 var i = 0, j = 0, iterator = 0;//iterator é usado para os marcadores de endereço
-var map,
-    icon_station = '/marker_blue.png',
-    marker_arrow = [],
-    polyline_route = [],
+var autocompleteAddress,//autocompleta endereços
     color_route =["#636af2", "#0c1290"],
-    autocompleteAddress,//autocompleta endereços
+    icon_station = '/marker_blue.png',
+    map,
+    marker_arrow = [],
     markerStation,
     marker_position = [],// marcador do autocomplete de endereços
-    place;//endereço pesquisado
+    place,//endereço pesquisado
+    polyline_route = [];
 
 
 $.widget("custom.catcomplete", $.ui.autocomplete, {
@@ -106,7 +106,7 @@ $(document).ready(function(){
 
     // Create a div to hold the control.
 
-    var icon_point = '/ponto.png',
+    var icon_point = '/pointstop.png',
         imageuser = '/userlocation.png',
         coord_stops = [],
         marker_stops = [],
@@ -122,27 +122,35 @@ $(document).ready(function(){
 
       directionsDisplay = new google.maps.DirectionsRenderer();
 
+      var styleMap =[
+        {
+          "featureType": "landscape.natural",
+          "stylers": [
+            { "color": "#f2e205" },
+            { "lightness": 85 }
+          ]
+        },{
+          "featureType": "water",
+          "stylers": [
+            { "color": "#048d64" }
+          ]
+        },{
+        }
+      ];
+
       var mapOptions = {
           zoom: 14,
           minZoom:10,
+          styles: styleMap,
           //center: fortaleza,
           panControl: false,
-          //panControlOptions: {
-          //  position: google.maps.ControlPosition.RIGHT_TOP
-          //},
           zoomControl: true,
           zoomControlOptions: {
               style: google.maps.ZoomControlStyle.SMALL, 
             position: google.maps.ControlPosition.RIGHT_TOP 
           },
-          mapTypeControl: false,
-          //mapTypeControlOptions: {
-          //  style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-          //  position: google.maps.ControlPosition.RIGHT_BOTTOM 
-          //},
-          
+          mapTypeControl: false,          
           mapTypeId: google.maps.MapTypeId.ROADMAP,
-
       };
       
       map = new google.maps.Map(document.getElementById('map_canvas'),mapOptions);
@@ -487,6 +495,8 @@ function setMarkerAddress(){
 
     });
 
+    console.log(place.geometry.location);
+
     if (marker_position[0] && marker_position[1]) { 
       
       var location_origin = marker_position[0].position;
@@ -496,16 +506,17 @@ function setMarkerAddress(){
       bordas_location.extend(location_origin);
       bordas_location.extend(location_destin);
       map.fitBounds(bordas_location);
-      $.getJSON("home/routes-bytwo-point/?point="+location_origin.mb+","+location_origin.nb+","+location_destin.mb+","+location_destin.nb,listRoutes);
+      $.getJSON("home/routes-bytwo-point/?point="+location_origin.kb+","+location_origin.lb+","+location_destin.kb+","+location_destin.lb,listRoutes);
       
     } else {
       var location_point = place.geometry.location;
-      $.getJSON("home/routes-by-point/?point="+location_point.mb+","+location_point.nb,listRoutes);  
+      $.getJSON("home/routes-by-point/?point="+location_point.kb+","+location_point.lb,listRoutes);  
     }
 };
 
 //Procura as rotas que passam em um dado ponto
 function searchRoutesPoint(){
+
   
   google.maps.event.addListener(autocompleteAddress, 'place_changed', function() {
     if(marker_position[iterator]){
@@ -519,6 +530,11 @@ function searchRoutesPoint(){
 //Autocomplete de Endereços 
 function setElement(element){
 
+  var city_options = {
+    //types: ['(locality)'],
+    componentRestrictions: {country: "br"}
+  };
+
   id_search_address = element.id;
 
   if(id_search_address == "origin"){
@@ -528,7 +544,7 @@ function setElement(element){
     iterator = 1;
   }
   
-  autocompleteAddress = new google.maps.places.Autocomplete(element);
+  autocompleteAddress = new google.maps.places.Autocomplete(element, city_options);
   autocompleteAddress.bindTo('bounds', map);
   searchRoutesPoint();
 };
