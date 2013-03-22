@@ -34,7 +34,7 @@ namespace :kml_data do
 		description = placemark.xpath(".//description").text.split(/<br>/)[3]#.gsub(/<br></,'')
 		stations_route = nil
 		if  description != nil && description.split(/b>/)[2]
-			stations_route = description.split(/b>/)[2]
+			stations_route = description.split(/b>/)[2].strip
 		end
 
 		Route.create(

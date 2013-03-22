@@ -94,6 +94,12 @@ $(document).ready(function(){
       requestCoordRoute($(this).attr("value"));
     });
 
+    $(".close-error").click(function(){
+      closeError("address");
+      closeError();
+
+    });
+
     //Twitter Shared
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
     
@@ -228,8 +234,6 @@ $(document).ready(function(){
     };
 
     initialize();
-
-    //google.maps.event.addListener(marker_autocomplete, 'dragend', function() { alert('marker dragged'); } );
     
     printStopMap = function(data){    
         for (i in data) {
@@ -333,17 +337,17 @@ $(window).resize(function(){
 function openError(errortype){
   
   if(errortype == "address"){
-    $(".address-error").css({visibility: "visible"});
+    $(".address-error").css({display: "block"});
   }else{
-    $(".search-error").css({visibility: "visible"});
+    $(".search-error").css({display: "block"});
   }
 };
 
 function closeError(errortype){
   if(errortype == "address"){
-    $(".address-error").css({visibility: "hidden"});
+    $(".address-error").css({display: "none"});
   }else{
-    $(".search-error").css({visibility: "hidden"});
+    $(".search-error").css({display: "none"});
   }
 };
 
@@ -421,13 +425,7 @@ function setStation(pos){
   
 }
 
-
-//Lista as rotas que passam em um dados ponto
 function listRoutes(data){
-    
-    if (data.length == 0){
-      openError();
-    }
 
     // apaga uma lista de rotas que já estavam na coluna esquerda
     $("#table_div").empty();
@@ -451,9 +449,16 @@ function listRoutes(data){
       }
       openColumn();
     }else{
-      $.each(data, function( event, item ) {
+      console.log(data);
+      if(data[1] == null){
+        closeColumn();
+        openError();
+      }else{
+        $.each(data, function( event, item ) {
           $("#table_div").append("<tr><td class='btn-link link_route' value="+item.cod_route+"><span>" + item.name_route + "</span></td></tr>");
-      });
+        });
+      }
+      
 
       //Exibir o segundo campo de busca
       openDestination();
@@ -466,6 +471,7 @@ function setMarkerAddress(){
     // BUG? place.geometry por hora não é reconhecido pelo console do navegador 
     if (!place.geometry) {
       // Inform the user that the place was not found and return.
+      alert("Égua!");
       openError("address");
       $(".address-error").alert();
       return;
@@ -495,7 +501,9 @@ function setMarkerAddress(){
 
     });
 
-    console.log(place.geometry.location);
+    /*google.maps.event.addListener(marker_position[iterator], 'dragend', function(event){ 
+      console.log(event); 
+    });*/
 
     if (marker_position[0] && marker_position[1]) { 
       
@@ -517,7 +525,6 @@ function setMarkerAddress(){
 //Procura as rotas que passam em um dado ponto
 function searchRoutesPoint(){
 
-  
   google.maps.event.addListener(autocompleteAddress, 'place_changed', function() {
     if(marker_position[iterator]){
       marker_position[iterator].setMap(null);
