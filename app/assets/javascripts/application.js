@@ -471,7 +471,6 @@ function setMarkerAddress(){
     // BUG? place.geometry por hora não é reconhecido pelo console do navegador 
     if (!place.geometry) {
       // Inform the user that the place was not found and return.
-      alert("Égua!");
       openError("address");
       $(".address-error").alert();
       return;
