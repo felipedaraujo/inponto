@@ -40,13 +40,15 @@ class HomeController < ApplicationController
     #  sql_results = "SELECT name_route, cod_route, ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) as dist FROM (select distinct on (name_route) name_route, cod_route, path::geography,ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) as dist from routes WHERE (ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('#{e[:coord_desc]}'::geography, path::geography) <= 50)) subselect  ORDER BY dist"
     #  results << orig_route_station = ActiveRecord::Base.connection.execute(sql_results)
     #end
-    results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500")
+    results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= ?", "#{params[:radius]}")
     render json: results
   end
 
   def search_route_two_point
     (latOring, lonOring, latDest, lonDest) = params[:point].split(",")
-    results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) <= 500")
+    (radiusOrigin, radiusDest) = params[:radius].split(",")
+
+    results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= ? AND ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) <= ?", radiusOrigin, radiusDest)
     #se results for vazio, não há rota direta
     if results.empty?
       st_list_oring = station_calc(latOring, lonOring)

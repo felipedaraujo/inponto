@@ -23,8 +23,10 @@ var autocompleteAddress,//autocompleta endereços
     marker_arrow = [],
     markerStation,
     marker_position = [],// marcador do autocomplete de endereços
+    circle_position = [],// circulo do marcador do autocomplete de endereços
     place,//endereço pesquisado
-    polyline_route = [];
+    polyline_route = [],
+    activeCircleEvent = true;
 
 
 $.widget("custom.catcomplete", $.ui.autocomplete, {
@@ -281,7 +283,6 @@ $(document).ready(function(){
     
     /*path = $.url().attr().query.split('=')[1]
     if(path != '') {
-        console.log(path)
         $.getJSON("/home/coord-route/"+path, printRoute)
     }
     */
@@ -382,7 +383,9 @@ function openDestination(){
     openColumn();
     return "block";
   });
-  $("#destination").focus();
+
+  if(!marker_position[1])
+    $("#destination").focus();
 };
 
 function closeDestination(){
@@ -407,9 +410,15 @@ function closeDestination(){
     marker_position[i].setMap(null);
   };
   marker_position = [];
+
+  for (var i = 0; i < circle_position.length; i++) {
+    circle_position[i].setMap(null);
+  };
+  circle_position = [];
+
 };
 
-//Plota o terminalno mapa
+//Plota o terminal no mapa
 function setStation(pos){
   if (marker_position[2]){
     marker_position[2].setMap(null);  
@@ -449,8 +458,7 @@ function listRoutes(data){
       }
       openColumn();
     }else{
-      console.log(data);
-      if(data[1] == null){
+      if(data[0] == null || data[0].length == 0){
         closeColumn();
         openError();
       }else{
@@ -458,18 +466,23 @@ function listRoutes(data){
           $("#table_div").append("<tr><td class='btn-link link_route' value="+item.cod_route+"><span>" + item.name_route + "</span></td></tr>");
         });
       }
-      
 
       //Exibir o segundo campo de busca
       openDestination();
-      
     }  
 };
+
+function ajustBoundsMapMarker(){
+  var bordas_location = new google.maps.LatLngBounds();
+  bordas_location.extend(marker_position[0].position);
+  bordas_location.extend(marker_position[1].position);
+  map.fitBounds(bordas_location);
+}
 
 function setMarkerAddress(){
 
     // BUG? place.geometry por hora não é reconhecido pelo console do navegador 
-    if (!place.geometry) {
+    if (!place) {
       // Inform the user that the place was not found and return.
       openError("address");
       $(".address-error").alert();
@@ -481,6 +494,7 @@ function setMarkerAddress(){
 
 
     // If the place has a geometry, then present it on a map.
+
     if (place.geometry.viewport) {
       closeError("address");
       closeError();
@@ -489,35 +503,113 @@ function setMarkerAddress(){
       closeError("address");
       closeError();
       map.setCenter(place.geometry.location);
-      map.setZoom(17);  // Why 17? Because it looks good.
+      map.setZoom(16);  // Why 17? Because it looks good.
     }
+
+    
 
     marker_position[iterator] = new google.maps.Marker({
       position: place.geometry.location,
       map: map,
       draggable: true,
+      title: (iterator == 0) ? 'origem' : 'destino',
       icon: '/marker_green'+iterator+'.png'
-
     });
 
-    /*google.maps.event.addListener(marker_position[iterator], 'dragend', function(event){ 
-      console.log(event); 
-    });*/
+    circle_position[iterator] = new google.maps.Circle({
+      center: marker_position[iterator].getPosition(),
+      radius: 400,
+      map: map,
+      editable: true
+    });
 
     if (marker_position[0] && marker_position[1]) { 
+
+      //adicionando evento no segundo marcador. (destino)
+      google.maps.event.addListener(marker_position[1], 'dragstart', function(event){ 
+        activeCircleEvent = false;
+      });
+
+      google.maps.event.addListener(marker_position[1], 'drag', function(event){ 
+        circle_position[1].setCenter(marker_position[1].getPosition());
+      });
+
+      google.maps.event.addListener(marker_position[1], 'dragend', function(event){ 
+        //ajustBoundsMapMarker();
+        activeCircleEvent = true;
+        $.getJSON("home/routes-bytwo-point/?radius="+circle_position[0].getRadius()+","+circle_position[1].getRadius()+"&point="+marker_position[0].getPosition().lat()+","+marker_position[0].getPosition().lng()+","+marker_position[1].getPosition().lat()+","+marker_position[1].getPosition().lng(),listRoutes);
+      });
       
-      var location_origin = marker_position[0].position;
-      var location_destin = marker_position[1].position;     
+      // --------------------------------------------------------------------
+
+      //adicionando evento no circulo do segundo marcador (destino) -------------
+      google.maps.event.addListener(circle_position[1], 'center_changed', function(){ 
+        if(activeCircleEvent){
+          //ajustBoundsMapMarker();
+          marker_position[1].setPosition(circle_position[1].getCenter());
+          $.getJSON("home/routes-bytwo-point/?radius="+circle_position[0].getRadius()+","+circle_position[1].getRadius()+"&point="+marker_position[0].getPosition().lat()+","+marker_position[0].getPosition().lng()+","+marker_position[1].getPosition().lat()+","+marker_position[1].getPosition().lng(),listRoutes);
+        }
+      });
+
+      google.maps.event.addListener(circle_position[1], 'radius_changed', function(){ 
+        //ajustBoundsMapMarker();
+        $.getJSON("home/routes-bytwo-point/?radius="+circle_position[0].getRadius()+","+circle_position[1].getRadius()+"&point="+marker_position[0].getPosition().lat()+","+marker_position[0].getPosition().lng()+","+marker_position[1].getPosition().lat()+","+marker_position[1].getPosition().lng(),listRoutes);
+      });
+
+      //--------------------------------------------------------------------------------
+
+      ajustBoundsMapMarker();
+      $.getJSON("home/routes-bytwo-point/?radius="+circle_position[0].getRadius()+","+circle_position[1].getRadius()+"&point="+marker_position[0].getPosition().lat()+","+marker_position[0].getPosition().lng()+","+marker_position[1].getPosition().lat()+","+marker_position[1].getPosition().lng(),listRoutes);
+    } 
+    else {
+
+      //adicionando evento no primeiro marcador. (origem) ----------------
+      google.maps.event.addListener(marker_position[0], 'dragstart', function(event){ 
+        activeCircleEvent = false;
+      });
+
+      google.maps.event.addListener(marker_position[0], 'drag', function(event){ 
+        circle_position[0].setCenter(marker_position[0].getPosition());
+      });
+
+      google.maps.event.addListener(marker_position[0], 'dragend', function(event){ 
+        activeCircleEvent = true;
+        if(circle_position[1]){
+          ajustBoundsMapMarker();
+          $.getJSON("home/routes-bytwo-point/?radius="+circle_position[0].getRadius()+","+circle_position[1].getRadius()+"&point="+marker_position[0].getPosition().lat()+","+marker_position[0].getPosition().lng()+","+marker_position[1].getPosition().lat()+","+marker_position[1].getPosition().lng(),listRoutes);
+        }else{
+          $.getJSON("home/routes-by-point/?radius="+circle_position[0].getRadius()+"&point="+marker_position[0].getPosition().lat()+","+marker_position[0].getPosition().lng(),listRoutes);
+        }
+      });
       
-      var bordas_location = new google.maps.LatLngBounds();
-      bordas_location.extend(location_origin);
-      bordas_location.extend(location_destin);
-      map.fitBounds(bordas_location);
-      $.getJSON("home/routes-bytwo-point/?point="+location_origin.kb+","+location_origin.lb+","+location_destin.kb+","+location_destin.lb,listRoutes);
-      
-    } else {
+      // --------------------------------------------------------------------
+
+      //adicionando evento no circulo do primeiro marcador (origem) -------------
+      google.maps.event.addListener(circle_position[0], 'center_changed', function(){ 
+        if(activeCircleEvent){
+          marker_position[0].setPosition(circle_position[0].getCenter());
+
+          if(circle_position[1]){
+            ajustBoundsMapMarker();
+            $.getJSON("home/routes-bytwo-point/?radius="+circle_position[0].getRadius()+","+circle_position[1].getRadius()+"&point="+marker_position[0].getPosition().lat()+","+marker_position[0].getPosition().lng()+","+marker_position[1].getPosition().lat()+","+marker_position[1].getPosition().lng(),listRoutes);
+          }else  
+            $.getJSON("home/routes-by-point/?radius="+circle_position[0].getRadius()+"&point="+marker_position[0].getPosition().lat()+","+marker_position[0].getPosition().lng(),listRoutes);
+        }
+      });
+
+      google.maps.event.addListener(circle_position[0], 'radius_changed', function(){ 
+        if(circle_position[1]){
+          ajustBoundsMapMarker();
+          $.getJSON("home/routes-bytwo-point/?radius="+circle_position[0].getRadius()+","+circle_position[1].getRadius()+"&point="+marker_position[0].getPosition().lat()+","+marker_position[0].getPosition().lng()+","+marker_position[1].getPosition().lat()+","+marker_position[1].getPosition().lng(),listRoutes);
+        }else{
+         $.getJSON("home/routes-by-point/?radius="+circle_position[0].getRadius()+"&point="+marker_position[0].getPosition().lat()+","+marker_position[0].getPosition().lng(),listRoutes);
+        }
+      });
+
+      //--------------------------------------------------------------------------------
       var location_point = place.geometry.location;
-      $.getJSON("home/routes-by-point/?point="+location_point.kb+","+location_point.lb,listRoutes);  
+
+      $.getJSON("home/routes-by-point/?radius="+circle_position[0].getRadius()+"&point="+location_point.lat()+","+location_point.lng(),listRoutes);  
     }
 };
 
@@ -527,6 +619,7 @@ function searchRoutesPoint(){
   google.maps.event.addListener(autocompleteAddress, 'place_changed', function() {
     if(marker_position[iterator]){
       marker_position[iterator].setMap(null);
+      circle_position[iterator].setMap(null);
     }
     place = autocompleteAddress.getPlace();
     setMarkerAddress();
