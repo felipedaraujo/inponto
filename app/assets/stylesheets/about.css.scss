@@ -1,0 +1,77 @@
+// Place all the styles related to the about controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body{
+	background-image: url("/noisy_grid.png");
+	background-repeat: repeat-x repeat-y;
+}
+
+body a:hover{
+	background: transparent;;
+}
+
+
+
+
+.body-gray button{
+	float:right;
+}
+
+.pellicle{
+	background-color: rgba(64,61,62,0.2);
+}
+
+body .row .nav{
+	margin-top: 40px;
+	font-size: 18px;
+	float: right;
+}
+
+body  .row .footer-principal .nav{
+	font-size: 14px;
+	float:left;
+}
+
+.img-rounded{
+	width: 359px;
+	height: 500px;
+	float:left;
+	margin: 15px auto;
+}
+
+.img-screen{
+	width: 181px;
+	height: 237px;
+	position: absolute;
+	z-index: 2;
+}
+
+/* O TIME */
+.body-black .container {
+	margin-bottom: 20px;
+}
+
+.body-black .container .span5{
+	text-align: center;
+}
+
+.body_black .span2{
+	margin: 0 auto;
+}
+
+.image-center{
+	text-align: center;
+}
+
+.paragraph-left{
+	text-align: left;	
+}
+
+.body-black .member-time{
+	margin: 25px 45px;
+}
+
+.social-networking{
+	margin-top: 40px;	
+}

@@ -1,0 +1,276 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+*/
+
+html body{
+	font-family:'lucida grande',tahoma,verdana,arial,sans-serif;
+	font-size:14px;
+	height:100%;
+	margin:0;
+	padding:0;
+}
+
+body a:visited{
+	color:#03A64A;
+}
+
+.tab-content .body-info-column .link_route{
+	color:#03A64A;
+}
+
+body [class^="icon-"],
+body [class*=" icon-"] {
+	background-image: url("/glyphicons-halflings.png");
+}
+
+.control-group .search_address:focus,
+.control-group .search_route:focus{
+    border-color: rgba(1, 64, 17, 0.6);
+	outline: 0;
+	outline: thin dotted 9;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(3, 166, 74, 0.6);
+	-moz-box-shadow:  inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(3, 166, 74, 0.6);
+	box-shadow: inset  inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(3, 166, 74, 0.6);
+}
+
+#info-column{
+	bottom: 20px;
+	display: none;
+	position: absolute;
+	left:167px;
+	top: 51px;
+	z-index: 1;
+}
+
+.navbar .navbar-inner .brand{
+	margin-left: 0px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+
+}
+
+.navbar-inner form{
+	margin: 0px;
+}
+
+body #info-column .table{
+	width: auto;
+	max-width: 90%;
+	margin: 0px auto;
+}
+
+#info-column .nav-tabs{
+	border-bottom: 0px;
+	margin-bottom: 0px;
+}
+
+#info-column .nav-tabs li{
+	background-color:rgba(255,255,255,0.9);
+	border-top-left-radius:4px; 
+	border-top-right-radius:4px;
+	height: 45px;
+	width: 79px;
+}
+
+
+#info-column .tab-content{
+	background-color:rgba(255,255,255,0.9);
+	height: 90%;
+	overflow: hidden;
+}
+
+#info-column .tab-content .tab-pane{
+	height: 100%;
+}
+
+#info-column table .arrow{
+	width: 14px;
+}
+
+#info-column table .station{
+	width: 30px;
+}
+
+#info-column table .bus{
+	width: 44px;
+}
+
+.body-info-column{
+	height: 80%;
+	overflow-y:auto;
+}
+
+.footer-info-column{
+	text-align: center;
+}
+
+.square-station{
+	width:14px;
+	height:14px;
+	background-color:#636AF2;
+	margin-top: 5px;
+	margin-left: 7px;
+}
+
+#info-column h5{
+	text-align: center;
+}
+
+
+
+.form-horizontal .control-destination .open-column{
+	z-index: 2;
+	padding-left: 31px;
+	padding-right: 32px;
+	margin-top: 0px;
+}
+
+.close-column{
+	margin-right: 5px;
+}
+
+.address-error,
+.search-error{
+	top: 110px;
+	left: 50%;
+	margin-left: -143px;
+	width: 235px;
+	text-align: center;
+	position:absolute;
+	z-index: 4;
+	display: none;
+}
+
+#main_map{
+	top:54px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	position: absolute;
+}
+
+#map_canvas{
+	top:0px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	position: absolute;
+}
+
+.form-horizontal #input-route{
+	display: none;	
+}
+
+.form-horizontal #origin{
+	display: inline;
+}
+
+.autocomplete{
+	list-style: none;
+	background-color: #fff;
+}
+
+.autocomplete .ui-menu-item{
+	font-family:'lucida grande',tahoma,verdana,arial,sans-serif;
+	font-size:14px;
+	margin-left: 4px;
+}
+
+.autocomplete .ui-menu-item a,
+.autocomplete .ui-menu-item a:hover{
+	background-color: transparent;
+	text-decoration: none;
+	border:0;	
+}
+
+body .autocomplete{
+	border-radius: 0px;
+	border-color:#ccc;
+}
+
+.autocomplete .ui-menu-item,
+.autocomplete .ui-menu-item:hover,
+.autocomplete .ui-menu-item:focus{
+	color:#000;
+	border:0;
+}
+
+.autocomplete .ui-menu-item:active,
+.autocomplete .ui-menu-item:hover,
+.autocomplete .ui-menu-item:focus,
+.autocomplete .ui-menu-item:visited{
+	background-color: #f0f0ff;
+}
+
+.form-horizontal .btn-group{
+	margin-bottom: 7px;	
+}
+
+.btn-group .icon-bus{
+	background-image: url("/bus.png");
+	background-position: 0px 0px;
+	
+}
+
+.form-horizontal .control-destination{
+	display: none;
+	position: absolute;
+	z-index: 2;
+}
+
+.navbar .form-horizontal .control-group{
+	margin-bottom: 0px;
+	padding-top: 5px;
+	position:relative;
+}
+
+.navbar .form-horizontal .control-destination{
+	padding-top: 0px;
+	margin-top:-2px;
+	margin-bottom: 8px;
+}
+
+@media (max-width: 767px) {
+
+	body .span5{
+		width: 366px;
+	}
+}
+
+@media (max-width: 480px) {
+
+	body .navbar-inner{
+		padding-left: 0px;
+		padding-right: 0px;
+
+	}
+	.control-destination #destination{
+		margin-left: 0px;	
+	}
+	
+	body .control-group{
+		float: none;
+		width: 290px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	#info-column{
+		left:50%;
+		margin-left: -145px;
+	}
+
+	#main_map{
+		top:49px;
+	}
+}

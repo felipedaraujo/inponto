@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta property="og:title" content="inponto | seu guia de transportes p&#xfa;blicos" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://inponto.com.br" />
+	<meta property="og:image" content="http://sphotos-f.ak.fbcdn.net/hphotos-ak-ash3/549983_425924874163461_1554588493_n.png" />
+	<meta property="og:site_name" content="inponto" />
+	<meta property="fb:admins" content="100001152335846" />
+  <meta name="description" content="Com o inponto você saberá que transporte pegar para chegar a um lugar qualquer, a localização de todas as paradas e o sentido das rotas">
+  <meta name="keywords" content="inponto, ônibus, fortaleza, itinerário, rota, como chegar, transporte público, ETUFOR">
+
+ 	<title>inponto</title>
+ 	<link rel="shortcut icon" href="/text3161-5.ico.png" type="image/x-icon" />
+	<%= stylesheet_link_tag "application", :media => "all" %>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places"></script>
+        <%= javascript_include_tag "application" %>
+	<%= csrf_meta_tags %>
+</head>
+<body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<%= yield %>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-34891480-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>
