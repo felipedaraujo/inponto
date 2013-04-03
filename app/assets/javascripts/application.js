@@ -513,11 +513,11 @@ function setMarkerAddress(){
       bordas_location.extend(location_origin);
       bordas_location.extend(location_destin);
       map.fitBounds(bordas_location);
-      $.getJSON("home/routes-bytwo-point/?point="+location_origin.kb+","+location_origin.lb+","+location_destin.kb+","+location_destin.lb,listRoutes);
+      $.getJSON("home/routes-bytwo-point/?point="+location_origin.jb+","+location_origin.kb+","+location_destin.jb+","+location_destin.kb,listRoutes);
       
     } else {
       var location_point = place.geometry.location;
-      $.getJSON("home/routes-by-point/?point="+location_point.kb+","+location_point.lb,listRoutes);  
+      $.getJSON("home/routes-by-point/?point="+location_point.jb+","+location_point.kb,listRoutes);  
     }
 };
 
