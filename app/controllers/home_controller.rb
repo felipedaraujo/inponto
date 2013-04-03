@@ -40,24 +40,26 @@ class HomeController < ApplicationController
     #  sql_results = "SELECT name_route, cod_route, ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) as dist FROM (select distinct on (name_route) name_route, cod_route, path::geography,ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) as dist from routes WHERE (ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('#{e[:coord_desc]}'::geography, path::geography) <= 50)) subselect  ORDER BY dist"
     #  results << orig_route_station = ActiveRecord::Base.connection.execute(sql_results)
     #end
-    results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500")
+    results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= ?", "#{params[:radius]}")
     render json: results
   end
 
   def search_route_two_point
     (latOring, lonOring, latDest, lonDest) = params[:point].split(",")
-    results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) <= 500")
+    (radiusOrigin, radiusDest) = params[:radius].split(",")
+
+    results = Route.select("distinct name_route, cod_route").where("ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= ? AND ST_Distance('POINT(#{latDest} #{lonDest})'::geography, path::geography) <= ?", radiusOrigin, radiusDest)
     #se results for vazio, não há rota direta
     if results.empty?
-      st_list_oring = station_calc(latOring, lonOring)
-      st_list_dest = station_calc(latDest, lonDest)
+      st_list_oring = station_calc(latOring, lonOring, radiusOrigin)
+      st_list_dest = station_calc(latDest, lonDest, radiusDest)
 
       #elege o melhor terminal
       st_integration = (st_list_oring & st_list_dest)
       
       results << PointStop.select("next_to, ST_AsText(coord_desc) as coord_desc").where("cod_point = '#{st_integration.first}'")
-      results << return_two_routes(st_integration, latOring, lonOring).first
-      results << return_two_routes(st_integration, latDest, lonDest).first
+      results << return_two_routes(st_integration, latOring, lonOring, radiusOrigin).first
+      results << return_two_routes(st_integration, latDest, lonDest, radiusDest).first
     end
 
     render json: results
@@ -80,10 +82,10 @@ class HomeController < ApplicationController
   end
 
   private
-    def station_calc(lat, lon)
+    def station_calc(lat, lon, radius)
       #Lista de terminais (stations) que possuem ônibus que passam na DESTINO 
       #::OBS:: Essa pesquisa pode ser melhorada ao máximo para parecer com o resultado de "st_acess_dest.uniq!"
-      acess_local = Route.select("distinct name_route, station").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500").map! {|r| r[:station]}
+      acess_local = Route.select("distinct name_route, station").where("ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= #{radius}").map! {|r| r[:station]}
 
       #Lista de terminais (stations) que possuem ônibus que passam na origem ORGANIZADA
       st_acess = acess_local.join(",").gsub(/;/,",").gsub(/,,/,",").split(",").map {|prefix| prefix.prepend('TER.FOR.').strip}
@@ -96,7 +98,7 @@ class HomeController < ApplicationController
       return st_acess - (st_near - st_acess) #(st_near & st_acess)
     end
 
-    def return_two_routes(st_integration, lat, lon)
+    def return_two_routes(st_integration, lat, lon, radius)
       results = []
       st_integration.first(1).each do |st|
         coord_st = PointStop.select("ST_AsText(coord_desc) as coord_desc").where("cod_point = '#{st}'")
@@ -107,11 +109,11 @@ class HomeController < ApplicationController
         daybreak = "#{Time.now.localtime.hour}#{Time.now.localtime.min}".to_i      
         #Se a 'hora atual' for as 00:00 e 05:20 será feita a consulta a seguir
         if (0 < daybreak and daybreak < 520)
-          sql_results = "SELECT name_route, cod_route, ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist FROM (select distinct on (name_route) name_route, cod_route, path::geography,ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist from routes WHERE (ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500 AND ST_Distance('#{coord_st.first[:coord_desc]}'::geography, path::geography) <= 50 AND station ILIKE '%#{station}%' AND name_route ILIKE '%Corujão%')) subselect  ORDER BY dist LIMIT 2"
+          sql_results = "SELECT name_route, cod_route, ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist FROM (select distinct on (name_route) name_route, cod_route, path::geography,ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist from routes WHERE (ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= #{radius} AND ST_Distance('#{coord_st.first[:coord_desc]}'::geography, path::geography) <= 50 AND station ILIKE '%#{station}%' AND name_route ILIKE '%Corujão%')) subselect  ORDER BY dist LIMIT 2"
           results << ActiveRecord::Base.connection.execute(sql_results)
         else
         #Se a 'hora atual' não for de madrugada, não retornará 'itineráios corujão'
-        sql_results = "SELECT name_route, cod_route, ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist FROM (select distinct on (name_route) name_route, cod_route, path::geography,ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist from routes WHERE (ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= 500 AND ST_Distance('#{coord_st.first[:coord_desc]}'::geography, path::geography) <= 50 AND station ILIKE '%#{station}%' AND name_route NOT ILIKE '%Corujão%')) subselect  ORDER BY dist LIMIT 2"
+        sql_results = "SELECT name_route, cod_route, ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist FROM (select distinct on (name_route) name_route, cod_route, path::geography,ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) as dist from routes WHERE (ST_Distance('POINT(#{lat} #{lon})'::geography, path::geography) <= #{radius} AND ST_Distance('#{coord_st.first[:coord_desc]}'::geography, path::geography) <= 50 AND station ILIKE '%#{station}%' AND name_route NOT ILIKE '%Corujão%')) subselect  ORDER BY dist LIMIT 2"
         results << ActiveRecord::Base.connection.execute(sql_results)
         end
       end
