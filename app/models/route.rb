@@ -1,4 +1,3 @@
 class Route < ActiveRecord::Base
-	has_many :point_routes
-	has_many :point_stops, :through => :point_routes
+	has_and_belongs_to_many :point_stops
 end

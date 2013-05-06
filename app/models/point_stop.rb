@@ -1,3 +1,3 @@
 class PointStop < ActiveRecord::Base
-	has_many :routes, :through => :point_routes
+	has_and_belongs_to_many :routes
 end

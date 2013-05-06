@@ -11,7 +11,7 @@
 development:
   adapter: postgresql
   encoding: unicode
-  database: inpontoprod
+  database: inponto
   pool: 5
   username: postgres
   password: postgres
