@@ -9,9 +9,10 @@
 #       Choose the win32 build.
 #       Install PostgreSQL and put its /bin directory on your path.
 development:
-  adapter: postgresql
-  encoding: unicode
-  database: inpontoprod
+  adapter: postgis
+  postgis_extension: true
+  schema_search_path: public
+  database: inpontodev
   pool: 5
   username: postgres
   password: postgres

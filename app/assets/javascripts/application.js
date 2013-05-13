@@ -92,9 +92,13 @@ $(document).ready(function(){
       
     });
 
-    $(".link_route").live('click', function () {
+    /*$(".link_route").live('click', function () {
       requestCoordRoute($(this).attr("value"));
-    });
+    });*/
+
+    $(document).on('click', ".link_route", function () {
+      requestCoordRoute($(this).attr("value"));
+    })
 
     $(".close-error").click(function(){
       closeError("address");

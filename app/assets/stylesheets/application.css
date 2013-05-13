@@ -114,6 +114,15 @@ body #info-column .table{
 	text-align: center;
 }
 
+.footer-info-column .row{
+	margin-left: 0px;
+}
+
+.shared{
+	float: left;
+}
+
+
 .square-station{
 	width:14px;
 	height:14px;

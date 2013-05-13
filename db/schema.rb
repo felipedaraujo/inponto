@@ -14,55 +14,59 @@
 ActiveRecord::Schema.define(:version => 20130204225859) do
 
   create_table "cities", :force => true do |t|
-    t.column "name", :string
-    t.column "cod_city", :string
-    t.column "created_at", :datetime, :null => false
-    t.column "updated_at", :datetime, :null => false
+    t.string   "name"
+    t.string   "cod_city"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "point_routes", :force => true do |t|
-    t.column "point_id", :integer
-    t.column "cod_route", :string
-    t.column "created_at", :datetime, :null => false
-    t.column "updated_at", :datetime, :null => false
+    t.integer  "point_id"
+    t.string   "cod_route"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "point_stops", :force => true do |t|
-    t.column "cod_point", :string
-    t.column "next_to", :string
-    t.column "route_point", :string
-    t.column "refer", :integer
-    t.column "created_at", :datetime, :null => false
-    t.column "updated_at", :datetime, :null => false
-    t.column "coord_desc", :point
+    t.string   "cod_point"
+    t.spatial  "coord_desc",  :limit => {:srid=>4326, :type=>"point", :geographic=>true}
+    t.string   "next_to"
+    t.string   "route_point"
+    t.integer  "refer"
+    t.datetime "created_at",                                                              :null => false
+    t.datetime "updated_at",                                                              :null => false
   end
+
+  add_index "point_stops", ["coord_desc"], :name => "index_point_stops_on_coord_desc", :spatial => true
 
   create_table "routes", :force => true do |t|
-    t.column "cod_route", :string
-    t.column "name_route", :string
-    t.column "sense_way", :boolean
-    t.column "price", :string
-    t.column "station", :string
-    t.column "created_at", :datetime, :null => false
-    t.column "updated_at", :datetime, :null => false
-    t.column "path", :line_string
+    t.string   "cod_route"
+    t.string   "name_route"
+    t.spatial  "path",       :limit => {:srid=>4326, :type=>"line_string", :geographic=>true}
+    t.boolean  "sense_way"
+    t.string   "price"
+    t.string   "station"
+    t.datetime "created_at",                                                                   :null => false
+    t.datetime "updated_at",                                                                   :null => false
   end
 
+  add_index "routes", ["path"], :name => "index_routes_on_path", :spatial => true
+
   create_table "transports", :force => true do |t|
-    t.column "cod_transpot", :string
-    t.column "sense_way", :boolean
-    t.column "accessibility", :boolean
-    t.column "stocking", :integer
-    t.column "coord_real_time", :string
-    t.column "created_at", :datetime, :null => false
-    t.column "updated_at", :datetime, :null => false
+    t.string   "cod_transpot"
+    t.boolean  "sense_way"
+    t.boolean  "accessibility"
+    t.integer  "stocking"
+    t.string   "coord_real_time"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "users", :force => true do |t|
-    t.column "name", :string
-    t.column "email", :string
-    t.column "created_at", :datetime, :null => false
-    t.column "updated_at", :datetime, :null => false
+    t.string   "name"
+    t.string   "email"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
 end
