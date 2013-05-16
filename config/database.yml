@@ -12,7 +12,7 @@ development:
   adapter: postgis
   postgis_extension: true
   schema_search_path: public
-  database: inpontodev
+  database: inponto
   pool: 5
   username: postgres
   password: postgres
