@@ -21,7 +21,7 @@ group :assets do
 end
 
 group :development do
-  gem 'rack-mini-profiler'
+  #gem 'rack-mini-profiler'
 end
 
 gem 'jquery-rails'

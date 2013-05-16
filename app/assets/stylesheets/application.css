@@ -14,7 +14,7 @@
 
 html body{
 	font-family:'lucida grande',tahoma,verdana,arial,sans-serif;
-	font-size:14px;
+	font-size:16px;
 	height:100%;
 	margin:0;
 	padding:0;
@@ -176,11 +176,11 @@ body #info-column .table{
 	position: absolute;
 }
 
-.form-horizontal #input-route{
+.form-horizontal #input-two{
 	display: none;	
 }
 
-.form-horizontal #origin{
+.form-horizontal #input-one{
 	display: inline;
 }
 
@@ -191,7 +191,7 @@ body #info-column .table{
 
 .autocomplete .ui-menu-item{
 	font-family:'lucida grande',tahoma,verdana,arial,sans-serif;
-	font-size:14px;
+	font-size:16px;
 	margin-left: 4px;
 }
 

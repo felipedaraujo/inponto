@@ -2,14 +2,17 @@
   <div class="navbar-inner">
     <div class="container">
  
-      <a class="brand" href="/home"><img src="/inponto_logo_bar_w.png"></a>
+      <a class="brand" href="http://www.inponto.com.br"><img src="/inponto_logo_bar_w.png"></a>
  
       <form class="form-horizontal">
         
         <div class="control-group">
-          <input type="text" id="input-route" class="search_route main-input span5" placeholder="Pesquise um Itinerário">
-
-          <input type="text" id="origin" class="search_address main-input span5" placeholder="Digite sua origem">
+          <div id="input-two">
+            <input type="text" id="input-route" class="search_route main-input span5" placeholder="Pesquise um Itinerário">
+          </div>
+          <div id="input-one">
+            <input type="text" id="origin" class="search_address main-input span5" placeholder="Digite sua origem">
+          </div>
 
           <div class="btn-group">
             <a id="getting-btn" class="btn active"><i class="icon-map-marker"></i></a>
@@ -51,8 +54,7 @@
         </div>
         <div class="footer-info-column">
           <!-- Icons Share -->
-          <div id ="icons-shared" class="row">
-
+          <!--div id ="icons-shared" class="row">
             <div class="shared">
               <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://inponto.com.br/" data-text="Você já se perguntou como faço pra chegar na rua fulano de tal pegando um ônibus? Conheça o @inPonto e liberte-se..." data-lang="pt">Tweetar</a>
             </div>
@@ -62,7 +64,7 @@
             </div>
             
             <div class="fb-like shared" data-href="http://inponto.com.br" data-send="false" data-layout="button_count" data-show-faces="true" data-font="verdana"></div>
-          </div>
+          </div-->
           <p class="footer-info row">
             <a href="http://www.facebook.com/inPonto" rel="publisher" target="_blank" title="facebook" class="btn-link">facebook.com/inponto</a>
             </br> &copy; <b>inponto</b> 2013
@@ -95,6 +97,5 @@
 $(".search_address").focus(function(){
   setElement(this);
 });
-
 
 </script>

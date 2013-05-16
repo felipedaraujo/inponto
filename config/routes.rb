@@ -9,7 +9,7 @@ InPonto::Application.routes.draw do
   #match "home/kml",            :to => "home#kml"
   match "home/name-route",      :to => "home#search_name_route"
   match "home/coord-route/:id", :to => "home#search_coord_route"
-  match "home/point-stop/",     :to => "home#point_layer_dinamic"
+  match "home/point-stop/",     :to => "home#point_layer_dynamic"
   
   match "home/routes-by-point/",:to => "home#search_route_point"
   match "home/routes-bytwo-point", :to => "home#search_route_two_point"

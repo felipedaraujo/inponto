@@ -24,7 +24,6 @@ var autocompleteAddress,//autocompleta endereços
     markerStation,
     marker_position = [],// marcador do autocomplete de endereços
     circle_position = [],// circulo do marcador do autocomplete de endereços
-    place,//endereço pesquisado
     polyline_route = [],
     activeCircleEvent = true;
 
@@ -40,7 +39,7 @@ $.widget("custom.catcomplete", $.ui.autocomplete, {
         //ul.append( "<li class='category'><b>" + item.category + "</b></li>" );
         currentCategory = item.category;
       }
-      that._renderItem( ul, item );
+      that._renderItemData( ul, item );
     });
   }
 });
@@ -73,8 +72,8 @@ $(document).ready(function(){
     $("#getting-btn").click(function() {
       $("#itinerary-btn").removeClass("active");
       $("#getting-btn").addClass("active");
-      $("#input-route").css("display", "none");
-      $("#origin").css("display", "inline");
+      $("#input-two").css("display", "none");
+      $("#input-one").css("display", "inline");
       $("#origin").focus();
     });
 
@@ -92,13 +91,9 @@ $(document).ready(function(){
       
     });
 
-    /*$(".link_route").live('click', function () {
+    $(document).on('click', ".link_route",function () {
       requestCoordRoute($(this).attr("value"));
-    });*/
-
-    $(document).on('click', ".link_route", function () {
-      requestCoordRoute($(this).attr("value"));
-    })
+    });
 
     $(".close-error").click(function(){
       closeError("address");
@@ -295,11 +290,19 @@ $(document).ready(function(){
      
       source: "/home/name-route",
       minLength: 2,      
-      select: function( event, ui ) {
-          
+      select: function( event, ui ){
+          console.info(ui);
           requestCoordRoute(ui.item.id);
       }
     });
+
+    /*$('.search_route').catcomplete({
+     
+      source: "/home/name-route",
+      minLength: 2 
+    }).result(function( event, ui ) {
+          requestCoordRoute(ui.item.id);
+    });*/
     
     //Verifica a localização do usuário a cada 1 segundo
     //window.setInterval(locationUser, 4000);
@@ -404,9 +407,9 @@ function closeDestination(){
       return "54px";
     }
   });
-  $("#origin").val("").css("display", "none");
+  $("#input-one").val("").css("display", "none");
   $(".pac-container").remove();
-  $("#input-route").css("display", "inline");
+  $("#input-two").css("display", "inline");
   $("#input-route").focus();
 
     
@@ -483,13 +486,12 @@ function ajustBoundsMapMarker(){
   map.fitBounds(bordas_location);
 }
 
-function setMarkerAddress(){
+function setMarkerAddress(found_place){
 
     // BUG? place.geometry por hora não é reconhecido pelo console do navegador 
-    if (!place) {
+    if (!found_place) {
       // Inform the user that the place was not found and return.
       openError("address");
-      $(".address-error").alert();
       return;
     }
     
@@ -499,21 +501,21 @@ function setMarkerAddress(){
 
     // If the place has a geometry, then present it on a map.
 
-    if (place.geometry.viewport) {
+    if (found_place.geometry.viewport) {
       closeError("address");
       closeError();
-      map.fitBounds(place.geometry.viewport);
+      map.fitBounds(found_place.geometry.viewport);
     } else {
       closeError("address");
       closeError();
-      map.setCenter(place.geometry.location);
-      map.setZoom(16);  // Why 17? Because it looks good.
+      map.setCenter(found_place.geometry.location);
+      map.setZoom(16);  // Why 16? Because it looks good.
     }
 
     
 
     marker_position[iterator] = new google.maps.Marker({
-      position: place.geometry.location,
+      position: found_place.geometry.location,
       map: map,
       draggable: true,
       title: (iterator == 0) ? 'origem' : 'destino',
@@ -611,7 +613,7 @@ function setMarkerAddress(){
       });
 
       //--------------------------------------------------------------------------------
-      var location_point = place.geometry.location;
+      var location_point = found_place.geometry.location;
 
       $.getJSON("home/routes-by-point/?radius="+circle_position[0].getRadius()+"&point="+location_point.lat()+","+location_point.lng(),listRoutes);  
     }
@@ -619,6 +621,7 @@ function setMarkerAddress(){
 
 //Procura as rotas que passam em um dado ponto
 function searchRoutesPoint(){
+  var place;
 
   google.maps.event.addListener(autocompleteAddress, 'place_changed', function() {
     if(marker_position[iterator]){
@@ -626,12 +629,15 @@ function searchRoutesPoint(){
       circle_position[iterator].setMap(null);
     }
     place = autocompleteAddress.getPlace();
-    setMarkerAddress();
+    setMarkerAddress(place);  
+
   });
 };
 
 //Autocomplete de Endereços 
 function setElement(element){
+
+  
 
   var city_options = {
     //types: ['(locality)'],
@@ -729,6 +735,11 @@ function printRoute(data){
 
 function requestCoordRoute(id){
   $.getJSON("/home/coord-route/"+id,printRoute);
+  $('#origin').keypress(function(e){
+    if(e.which == 13) {
+      alert('enter!!')
+    }
+  })
 }
 
 
