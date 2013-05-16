@@ -26,10 +26,6 @@ class HomeController < ApplicationController
     radius = params[:radius]
     
     #AS LINHA A SEGUIR RETORNAM ROTAS ORDENADAS POR DISTANCIA
-    #transport_station = PointStop.select("ST_AsText(coord_desc) as coord_desc").where("type = 2").map do |e|
-    #  sql_results = "SELECT name_route, cod_route, ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) as dist FROM (select distinct on (name_route) name_route, cod_route, path::geography,ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) as dist from routes WHERE (ST_Distance('POINT(#{latOring} #{lonOring})'::geography, path::geography) <= 500 AND ST_Distance('#{e[:coord_desc]}'::geography, path::geography) <= 50)) subselect  ORDER BY dist"
-    #  results << orig_route_station = ActiveRecord::Base.connection.execute(sql_results)
-    #end
     results = Route.select("distinct name_route, cod_route").where("ST_DWithin('POINT(#{lat} #{lon})', path,?)", "#{radius}")
     render json: results
   end
@@ -47,7 +43,8 @@ class HomeController < ApplicationController
       #elege o melhor terminal
       st_integration = (st_list_oring & st_list_dest)
       
-      results << PointStop.select("next_to, ST_AsText(coord_desc) as coord_desc").where("cod_point = '#{st_integration.first}'")
+      sql_results = PointStop.select("next_to, ST_AsText(coord_desc) as coord_desc").where("cod_point = '#{st_integration.first}'").to_sql
+      results << ActiveRecord::Base.connection.execute(sql_results)
       results << Route.return_two_routes(st_integration, latOring, lonOring).first
       results << Route.return_two_routes(st_integration, latDest, lonDest).first
     end
