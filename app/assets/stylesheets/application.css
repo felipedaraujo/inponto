@@ -176,11 +176,11 @@ body #info-column .table{
 	position: absolute;
 }
 
-.form-horizontal #input-two{
+#input-two{
 	display: none;	
 }
 
-.form-horizontal #input-one{
+#input-one{
 	display: inline;
 }
 

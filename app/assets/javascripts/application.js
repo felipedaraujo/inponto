@@ -102,14 +102,14 @@ $(document).ready(function(){
     });
 
     //Twitter Shared
-    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+    /*!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");*/
     
     //GooglePlus Shared
-    (function() {
+    /*(function() {
       var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
       po.src = 'https://apis.google.com/js/plusone.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-    })();
+    })();*/
 
     // Create a div to hold the control.
 
@@ -407,7 +407,7 @@ function closeDestination(){
       return "54px";
     }
   });
-  $("#input-one").val("").css("display", "none");
+  $("#input-one").css("display", "none");
   $(".pac-container").remove();
   $("#input-two").css("display", "inline");
   $("#input-route").focus();
@@ -563,7 +563,7 @@ function setMarkerAddress(found_place){
       });
 
       //--------------------------------------------------------------------------------
-
+     
       ajustBoundsMapMarker();
       $.getJSON("home/routes-bytwo-point/?radius="+circle_position[0].getRadius()+","+circle_position[1].getRadius()+"&point="+marker_position[0].getPosition().lat()+","+marker_position[0].getPosition().lng()+","+marker_position[1].getPosition().lat()+","+marker_position[1].getPosition().lng(),listRoutes);
     } 
@@ -735,11 +735,6 @@ function printRoute(data){
 
 function requestCoordRoute(id){
   $.getJSON("/home/coord-route/"+id,printRoute);
-  $('#origin').keypress(function(e){
-    if(e.which == 13) {
-      alert('enter!!')
-    }
-  })
 }
 
 

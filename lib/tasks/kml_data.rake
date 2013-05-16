@@ -5,10 +5,10 @@ namespace :kml_data do
 
 
     ActiveRecord::Base.connection.execute(
-    	"truncate table routes, point_stops, point_routes;
+    	"truncate table routes, point_stops, point_stop_routes;
 		alter sequence routes_id_seq restart with 1;
 		alter sequence point_stops_id_seq restart with 1;
-		alter sequence point_routes_id_seq restart with 1;"
+		alter sequence point_stop_routes_id_seq restart with 1;"
 	)
 
 
@@ -85,10 +85,17 @@ namespace :kml_data do
 		route_point = "Sem rotas" if !(route_point =~ /^\d/)
 		
 		route_point.split(/;/).map do |single_cod_route|
-			PointRoute.create(
-				point_id: point_id,
-				cod_route: single_cod_route
-			)
+
+			if(single_cod_route != "Sem rotas")
+
+				route_id = Route.find_by_cod_route(single_cod_route).id
+
+				PointStopRoute.create(
+					point_stop_id: point_id,
+					route_id: route_id
+				)
+
+			end
 
 		end
 	end
