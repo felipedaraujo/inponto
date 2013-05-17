@@ -10,12 +10,14 @@ class Route < ActiveRecord::Base
       results = []
       st = st_integration.first
 
-      coord_st = PointStop.select("ST_AsText(coord_desc) as coord_desc").where("cod_point = '#{st}'").first
-      if coord_st
+      #coord_st = PointStop.select("ST_AsText(coord_desc) as coord_desc").where("cod_point = '#{st}'").first
+      coord_sql = PointStop.select("ST_AsText(coord_desc) as coord_desc").where("cod_point = '#{st}'").to_sql
+      coord_st = ActiveRecord::Base.connection.execute(coord_sql).first['coord_desc']
+      unless coord_st.blank?
         station = st.split('.').last
         sql_results = "SELECT name_route, cod_route, ST_Distance('POINT(#{lat} #{lon})', path) as dist FROM "+
         "(select distinct on (name_route) name_route, cod_route, path,ST_Distance('POINT(#{lat} #{lon})', path) as dist from routes "+
-        "WHERE (ST_DWithin('POINT(#{lat} #{lon})', path, 500) AND ST_DWithin('#{coord_st[:coord_desc]}', path, 50) "+
+        "WHERE (ST_DWithin('POINT(#{lat} #{lon})', path, 500) AND ST_DWithin('#{coord_st}', path, 50) "+
         "AND station ILIKE '%#{station}%' AND name_route " + ((corujao?) ? "" : "NOT ")+ 
         "ILIKE '%Coruj%')) subselect " + 
         "ORDER BY dist LIMIT 2"
