@@ -27,22 +27,21 @@ var autocompleteAddress,//autocompleta endereços
     polyline_route = [],
     activeCircleEvent = true;
 
+  $.widget("custom.catcomplete", $.ui.autocomplete, {
+    _renderMenu: function( ul, items ) {
+      var that = this;
+      var currentCategory = "";
+      $.each( items, function( index, item ) {
+        if ( item.category != currentCategory ) {
 
-$.widget("custom.catcomplete", $.ui.autocomplete, {
-  _renderMenu: function( ul, items ) {
-    var that = this;
-    var currentCategory = "";
-    $.each( items, function( index, item ) {
-      if ( item.category != currentCategory ) {
-
-        ul.removeClass("ui-menu ui-widget").addClass("autocomplete");
-        //ul.append( "<li class='category'><b>" + item.category + "</b></li>" );
-        currentCategory = item.category;
-      }
-      that._renderItemData( ul, item );
-    });
-  }
-});
+          ul.removeClass("ui-menu ui-widget").addClass("autocomplete");
+          //ul.append( "<li class='category'><b>" + item.category + "</b></li>" );
+          currentCategory = item.category;
+        }
+        that._renderItemData( ul, item );
+      });
+    }
+  });
 
 $(document).ready(function(){
 
@@ -291,7 +290,6 @@ $(document).ready(function(){
       source: "/home/name-route",
       minLength: 2,      
       select: function( event, ui ){
-          console.info(ui);
           requestCoordRoute(ui.item.id);
       }
     });
@@ -637,8 +635,6 @@ function searchRoutesPoint(){
 //Autocomplete de Endereços 
 function setElement(element){
 
-  
-
   var city_options = {
     //types: ['(locality)'],
     componentRestrictions: {country: "br"}
@@ -696,19 +692,20 @@ function printRoute(data){
   
   cleanMap(polyline_route);//apaga as rotas que estiverem plotada na tela
   cleanMap(marker_arrow);//apaga as setas que estiverem plotadas na tela
-
         
   coord_route = [[],[]];
-  for(i in data){
+  for(i in coord_route){
       for(j in data[i]){
+        if(i < 2){
           lat = data[i][j][0];
           lng = data[i][j][1];
           coord_route[i][j] = new google.maps.LatLng(lat, lng);
           //bordas.extend e bordas.getCenter são métodos para encontrar o centro das rotas
           bordas.extend(coord_route[i][j]);                
+        }
       }
   }
-  for (i=0; i < data.length; ++i) {
+  for (i=0; i < coord_route.length; ++i) {
       polyline_route[i] = new google.maps.Polyline({
           path: coord_route[i],
           strokeColor: color_route[i],
@@ -717,7 +714,6 @@ function printRoute(data){
       });
 
       polyline_route[i].setMap(map);//plota as rotas no mapa
-      
   }
 
   map.fitBounds(bordas);//centraliza a rota no mapa

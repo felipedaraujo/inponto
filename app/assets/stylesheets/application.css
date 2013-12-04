@@ -189,6 +189,10 @@ body #info-column .table{
 	background-color: #fff;
 }
 
+.ui-helper-hidden-accessible{
+	display: none;
+}
+
 .autocomplete .ui-menu-item{
 	font-family:'lucida grande',tahoma,verdana,arial,sans-serif;
 	font-size:16px;
