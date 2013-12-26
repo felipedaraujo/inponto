@@ -41,7 +41,7 @@ var autocompleteAddress,//autocompleta endereços
         that._renderItemData( ul, item );
       });
     }
-  });
+  })
 
 $(document).ready(function(){
 
@@ -55,7 +55,7 @@ $(document).ready(function(){
       $(".main-input")
         .removeClass("span5")
         .addClass("span3");
-      $("#info-column").css("width","290px");
+      $("#info-column").css("width","305px");
     }
 
     if ($(window).width() < 481){
@@ -293,14 +293,6 @@ $(document).ready(function(){
           requestCoordRoute(ui.item.id);
       }
     });
-
-    /*$('.search_route').catcomplete({
-     
-      source: "/home/name-route",
-      minLength: 2 
-    }).result(function( event, ui ) {
-          requestCoordRoute(ui.item.id);
-    });*/
     
     //Verifica a localização do usuário a cada 1 segundo
     //window.setInterval(locationUser, 4000);
@@ -327,7 +319,7 @@ $(window).resize(function(){
       $(".main-input")
         .removeClass("span5")
         .addClass("span3");
-      $("#info-column").css("width","290px");
+      $("#info-column").css("width","305px");
     }
 
     if ($(window).width() < 481){

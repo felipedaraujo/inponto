@@ -187,6 +187,10 @@ body #info-column .table{
 .autocomplete{
 	list-style: none;
 	background-color: #fff;
+	left:169px;
+	margin: 0px;
+	width: 366px;
+
 }
 
 .ui-helper-hidden-accessible{
@@ -273,14 +277,14 @@ body .autocomplete{
 	
 	body .control-group{
 		float: none;
-		width: 290px;
+		width: 305px;
 		margin-left: auto;
 		margin-right: auto;
 	}
 
 	#info-column{
 		left:50%;
-		margin-left: -145px;
+		margin-left: -155px;
 	}
 
 	#main_map{

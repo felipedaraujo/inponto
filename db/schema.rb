@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130204225859) do
+ActiveRecord::Schema.define(:version => 20130506211812) do
 
   create_table "cities", :force => true do |t|
     t.string   "name"
@@ -20,11 +20,11 @@ ActiveRecord::Schema.define(:version => 20130204225859) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "point_routes", :force => true do |t|
-    t.integer  "point_id"
-    t.string   "cod_route"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+  create_table "point_stop_routes", :force => true do |t|
+    t.integer  "point_stop_id"
+    t.integer  "route_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "point_stops", :force => true do |t|

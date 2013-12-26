@@ -31,7 +31,7 @@ gem 'thin'
 
 #gem 'postgis_adapter'
 gem 'activerecord-postgis-adapter'
-#gem 'rails3-jquery-autocomplete'
+gem 'rails3-jquery-autocomplete'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
