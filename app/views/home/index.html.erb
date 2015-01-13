@@ -1,19 +1,17 @@
 <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
- 
       <a class="brand" href="http://www.inponto.com.br"><img src="/inponto_logo_bar_w.png"></a>
- 
       <form class="form-horizontal">
-        
         <div class="control-group">
           <div id="input-two">
             <input type="text" id="input-route" class="search_route main-input span5" placeholder="Pesquise um Itinerário">
           </div>
+
           <div id="input-one">
             <input type="text" id="origin" class="search_address main-input span5" placeholder="Digite sua origem">
           </div>
-
+          
           <div class="btn-group">
             <a id="getting-btn" class="btn active"><i class="icon-map-marker"></i></a>
             <a id="itinerary-btn" class="btn" ><i class="icon-bus"></i></a>            
@@ -22,63 +20,38 @@
           
         <div class="control-group control-destination">
           <input type="text" id="destination" class="search_address main-input span5" placeholder="Digite seu destino">
-            
           <a class="btn active open-column"><i class="open-icon icon-chevron-up"></i></a>
         </div>
-
-      </form>
- 
+      </form> 
     </div>
   </div>
 </div>
 
-
-
 <div class="tabbable" id="info-column">
-
   <ul class="nav nav-tabs">
     <li class="pull-right"></li>
   </ul>
   <div class="tab-content">
     <div class="tab-pane active" id="tab1">
         <div class="header-info-column">
-          
-
         </div>
         <h5>Itinerários</h5>
-        <div class="body-info-column" id="body-info-column">
-          
+        <div class="body-info-column" id="body-info-column">        
           <table class="table table-condensed" id="table_div">
           </table>
-            
         </div>
         <div class="footer-info-column">
-          <!-- Icons Share -->
-          <!--div id ="icons-shared" class="row">
-            <div class="shared">
-              <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://inponto.com.br/" data-text="Você já se perguntou como faço pra chegar na rua fulano de tal pegando um ônibus? Conheça o @inPonto e liberte-se..." data-lang="pt">Tweetar</a>
-            </div>
-            
-            <div class="shared">
-               <div class="g-plus" data-href="http://inponto.com.br" data-action="share" data-annotation="bubble"></div>
-            </div>
-            
-            <div class="fb-like shared" data-href="http://inponto.com.br" data-send="false" data-layout="button_count" data-show-faces="true" data-font="verdana"></div>
-          </div-->
           <p class="footer-info row">
             <a href="http://www.facebook.com/inPonto" rel="publisher" target="_blank" title="facebook" class="btn-link">facebook.com/inponto</a>
             </br> &copy; <b>inponto</b> 2013
           </p>
         </div>
-
     </div>
   </div>
 </div>
 
 <div id="main_map">
-  
   <div id="map_canvas"></div>    
-
 </div>  
 
 <div class="alert alert-error address-error">  
@@ -91,11 +64,8 @@
   <strong>Itinerário não encontrado!</strong><br>Não encontramos itinerário entre esses pontos.  
 </div>
 
-
 <script type="text/javascript">
-
-$(".search_address").focus(function(){
-  setElement(this);
-});
-
+  $(".search_address").focus(function(){
+    setElement(this);
+  });
 </script>
