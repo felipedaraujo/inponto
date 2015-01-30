@@ -4,6 +4,7 @@ development:
   database: inponto_dev
   pool: 5
   timeout: 5000
+  schema_search_path: "public,postgis"
 
 test:
   username: <%= `whoami`.chomp %>
@@ -11,6 +12,7 @@ test:
   database: inponto_test
   pool: 5
   timeout: 5000
+  schema_search_path: "public,postgis"
 
 production:
   username: <%= `whoami`.chomp %>
@@ -18,4 +20,4 @@ production:
   database: inponto
   pool: 5
   timeout: 5000
-  
+  schema_search_path: "public,postgis"
