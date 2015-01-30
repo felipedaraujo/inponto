@@ -1,12 +1,12 @@
 development:
-  username: postgres
+  username: <%= `whoami`.chomp %>
   adapter: postgis
   database: inponto_dev
   pool: 5
   timeout: 5000
 
 test:
-  username: postgres
+  username: <%= `whoami`.chomp %>
   adapter: postgis
   database: inponto_test
   pool: 5
@@ -18,3 +18,4 @@ production:
   database: inponto
   pool: 5
   timeout: 5000
+  
