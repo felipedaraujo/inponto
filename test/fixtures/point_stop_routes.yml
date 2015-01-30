@@ -1,9 +1,0 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
-one:
-  point_stop_id: 1
-  route_id: 1
-
-two:
-  point_stop_id: 1
-  route_id: 1
