@@ -11,3 +11,13 @@ To see the project working:
 This project was created to be the Google Maps public transport of Fortaleza, the 5th largest city of Brazil, that since January 9th has the official service of Google Maps.
 
 Soon we will be offering to other cities in Brazil and the world that do not have Google Maps public transport such as Brasilia, Salvador, Recife, Natal, Manaus.
+
+
+#### Database
+To create and run a geographic databse you must do:
+1) Run `rake db:create`
+2) Access your postgres console `psql postgres`
+3) Choose the database `\connect inponto_dev`
+4) Add the postgis extension `CREATE EXTENSION postgis;`
+5) Run `rake db:migrate`
+6) Populate the database with data from fortaleza `rake data:fortaleza`
