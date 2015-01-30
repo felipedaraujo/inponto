@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130506211812) do
+ActiveRecord::Schema.define(:version => 0) do
 
   create_table "cities", :force => true do |t|
     t.string   "name"
@@ -25,48 +25,6 @@ ActiveRecord::Schema.define(:version => 20130506211812) do
     t.integer  "route_id"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
-  end
-
-  create_table "point_stops", :force => true do |t|
-    t.string   "cod_point"
-    t.spatial  "coord_desc",  :limit => {:srid=>4326, :type=>"point", :geographic=>true}
-    t.string   "next_to"
-    t.string   "route_point"
-    t.integer  "refer"
-    t.datetime "created_at",                                                              :null => false
-    t.datetime "updated_at",                                                              :null => false
-  end
-
-  add_index "point_stops", ["coord_desc"], :name => "index_point_stops_on_coord_desc", :spatial => true
-
-  create_table "routes", :force => true do |t|
-    t.string   "cod_route"
-    t.string   "name_route"
-    t.spatial  "path",       :limit => {:srid=>4326, :type=>"line_string", :geographic=>true}
-    t.boolean  "sense_way"
-    t.string   "price"
-    t.string   "station"
-    t.datetime "created_at",                                                                   :null => false
-    t.datetime "updated_at",                                                                   :null => false
-  end
-
-  add_index "routes", ["path"], :name => "index_routes_on_path", :spatial => true
-
-  create_table "transports", :force => true do |t|
-    t.string   "cod_transpot"
-    t.boolean  "sense_way"
-    t.boolean  "accessibility"
-    t.integer  "stocking"
-    t.string   "coord_real_time"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-  end
-
-  create_table "users", :force => true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
   end
 
 end
