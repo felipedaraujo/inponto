@@ -6,6 +6,14 @@ development:
   timeout: 5000
   schema_search_path: "public,postgis"
 
+test:
+  username: <%= `whoami`.chomp %>
+  adapter: postgis
+  database: inponto_test
+  pool: 5
+  timeout: 5000
+  schema_search_path: "public,postgis"
+
 production:
   username: <%= `whoami`.chomp %>
   adapter: postgis

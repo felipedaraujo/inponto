@@ -3,7 +3,7 @@ namespace :bus_route do
   desc 'Put the data kml_etufor in the database'
   task :fortaleza => :environment do
 
-		#lê o kml das rotas
+		# lê o kml das rotas
 		kml_route = Nokogiri::XML File.read("lib/tasks/kml/Transporte_Coletivo_Fortaleza.kml")
 		kml_route.remove_namespaces!
 		kml_route.xpath("/kml//Folder//Folder//Placemark").each do |placemark|		
@@ -17,14 +17,14 @@ namespace :bus_route do
 									 .strip
 									 .gsub(/\(STPC\)/,'- topic')
 
-			#coord_route possuia a ordem das latitude e longitudes invertidas
+			# coord_route possuia a ordem das latitude e longitudes invertidas
 			coord_route = placemark
 										.xpath(".//coordinates")
 										.text.strip.gsub(/,/,' ')
 										.gsub(/\s0\s/,',')
 										.gsub(/\s0/,'')
 			
-			#real_coord_route refina as coordenadas devido o kml possui as coordenadas invertidas
+			# real_coord_route refina as coordenadas devido o kml possui as coordenadas invertidas
 			real_coord_route = coord_route.split(/,/).map do |coordinated|
 				coord_route_long = coordinated.split(/\s/)[0] 
 				coord_route_lat = coordinated.split(/\s/)[1]
