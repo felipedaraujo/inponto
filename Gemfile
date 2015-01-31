@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.1'
+gem 'rails', '3.2.21'
 gem 'pg'
 
 group :assets do
@@ -10,7 +10,11 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
-gem 'jquery-rails'
+group :development, :test do
+	gem 'test-unit'
+end
+
+gem 'jquery-rails', "< 3.0.0"
 gem 'nokogiri'
 gem 'thin'
 gem 'activerecord-postgis-adapter'
