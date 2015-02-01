@@ -14,9 +14,8 @@ group :development, :test do
 	gem 'test-unit'
 end
 
-gem 'jquery-rails', "< 3.0.0"
+gem 'jquery-rails', "< 3.0.0	"
 gem 'nokogiri'
-gem 'thin'
 gem 'activerecord-postgis-adapter'
 gem 'rails3-jquery-autocomplete'
 gem 'rails_12factor'
